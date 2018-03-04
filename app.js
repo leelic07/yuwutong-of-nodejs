@@ -10,6 +10,7 @@ const controller = require('./controller');
 const index = require('./routes/index');
 const users = require('./routes/users');
 const token = require('./routes/token');
+const registrations = require('./routes/registrations');
 //引用数据库模型
 require('./model/index');
 // error handler
@@ -42,6 +43,7 @@ app.use(controller.getTokenController().verifyToken);
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 app.use(token.routes(), token.allowedMethods());
+app.use(registrations.routes(), registrations.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

@@ -20,18 +20,18 @@ let registrations = new mongoose.Schema({
 
 class Registrations {
     constructor() {
-        this.registrations = mongoose.model('registrations', registrations);
+        this.registration = mongoose.model('registrations', registrations);
     }
 
     //分页查询家属注册列表
-    find(condition = {}) {
+    find(condition = {}, field = {}, options = {}) {
         let self = this;
         let page = condition.page, limit = condition.limit;
         let start = (page - 1) * limit > 0 ? (page - 1) * limit : 0;
         delete condition.page;
         delete condition.limit;
         return new Promise((resolve, reject) => {
-            self.registrations.find(condition).start(start).limit(limit).exec((e, doc) => {
+            self.registration.find(condition, field, options).start(start).limit(limit).exec((e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -41,11 +41,18 @@ class Registrations {
     }
 
     //增加家属注册信息
-    create(data = {}) {
+    create(...field) {
         let self = this;
         return new Promise((resolve, reject) => {
-            let newRegistrations = new self.registrations(data);
+            typeof field === 'object' && (field = [].push(field));
+            self.registration.create(...field, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            })
         });
-
     }
 }
+
+module.exports = new Registrations();

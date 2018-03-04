@@ -3,6 +3,7 @@
  */
 const token = require('./modules/token');
 const users = require('./modules/users');
+const registrations = require('./modules/registrations');
 
 class Controller {
     constructor(params) {
@@ -20,11 +21,17 @@ class Controller {
     getUsersController() {
         return this.users;
     }
+
+    //获取家属注册控制器
+    getRegistrationsController() {
+        return this.registrations;
+    }
 }
 
 let controller = new Controller({
     token,
-    users
+    users,
+    registrations
 });
 
 module.exports = controller;

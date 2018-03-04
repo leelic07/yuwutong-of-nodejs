@@ -40,7 +40,7 @@ class Token {
                 // 确认token
                 jwt.verify(token, config.secret, async (err, decoded) => {
                     if (err) {
-                        ctx.body = {code: 401, message: 'token信息错误.', result: ''};
+                        ctx.body = {code: 401, msg: 'token信息错误,请重新登录', result: ''};
                     } else {
                         // 如果没问题就把解码后的信息保存到请求中，供后面的路由使用
                         ctx.request.users = decoded._doc;
@@ -50,7 +50,7 @@ class Token {
                 });
             } else {
                 // 如果没有token，则返回错误
-                ctx.throew(403, '没有提供token');
+                ctx.throw(403, '没有提供token');
             }
         }
     }

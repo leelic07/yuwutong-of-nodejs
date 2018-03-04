@@ -21,10 +21,10 @@ class User {
     }
 
     //查询用户
-    find(condition = {}) {
+    find(condition = {}, field = {}, options = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.user.find(condition, (e, doc) => {
+            self.user.find(condition, field, options, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -34,11 +34,11 @@ class User {
     }
 
     //新增用户
-    create(data = {}) {
+    create(field = {}) {
         let self = this;
-        typeof data === 'object' && (data = [].push(data));
+        typeof field === 'object' && (field = [].push(field));
         return new Promise((resolve, reject) => {
-            self.insertMany(data, (e, doc) => {
+            self.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -48,11 +48,11 @@ class User {
     }
 
     //修改用户
-    update(condition = {}, data = {}) {
+    update(condition = {}, filed = {}) {
         let self = this;
-        !data.update_at && (data.update_at = Date.now());
+        !filed.update_at && (filed.update_at = Date.now());
         return new Promise((resolve, reject) => {
-            self.user.update(condition, data, (e, doc) => {
+            self.user.update(condition, filed, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);

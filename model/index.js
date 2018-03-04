@@ -4,6 +4,7 @@
 const mongoose = require('mongoose');
 const config = require('../config');
 const users = require('./modules/users');
+const registrations = require('./modules/registrations');
 
 //数据库对象
 class DataBase {
@@ -29,15 +30,19 @@ class DataBase {
     getUsers() {
         return this.users;
     }
+
+    //获取家属注册模型
+    getRegistrations() {
+        return this.registrations;
+    }
 }
 
 let database = new DataBase({
-    users
+    users,
+    registrations
 });
 //连接数据库
 database.connect(mongoose, config);
-//将数据库对象放到上下文当中
-// app.context.db = database;
 
 module.exports = database;
 
