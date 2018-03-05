@@ -9,12 +9,12 @@ class Registrations {
 
     //获取家属注册信息
     async registrations(ctx, next) {
-
-        ctx.body = {
-            code: 200,
-            msg: 'registrations',
-            result: ''
-        }
+        console.log('query', ctx.request.query);
+        // ctx.body = {
+        //     code: 200,
+        //     msg: 'registrations',
+        //     result: ''
+        // }
         // await db.getRegistrations().create({
         //     jail_id: 1,//监狱id
         //     name: '三毛',//家属名称
@@ -48,27 +48,32 @@ class Registrations {
         //     }
         // }).catch(err => ctx.throw(err.status | 500, '添加家属注册信息失败'));
 
-
-        // await db.getRegistrations().find(ctx.request.query).then(registrations => {
-        //     if (registrations.length) {
-        //         ctx.body = {
-        //             msg: '查询家属注册列表成功',
-        //             result: {
-        //                 registrations: registrations
-        //             }
-        //         }
-        //     } else {
-        //         ctx.body = {
-        //             msg: '未找到家属注册信息',
-        //             result: {
-        //                 registrations: registrations
-        //             }
-        //         }
-        //     }
-        // }).catch(err => ctx.throw(err.status | 500, '查询家属注册列表失败'));
+        await db.getRegistrations().findPage({}, {}, ctx.request.query).then(async registrations => {
+            let size;//家属注册列表的总数据条数
+            if (registrations.length) {
+                await db.getRegistrations().findTotal().then(total => size = total).catch(err => ctx.throw(err.status | 500, "查询家属注册列表失败"));
+                ctx.body = {
+                    code: 200,
+                    msg: '查询家属注册列表成功',
+                    data: {
+                        registrations: registrations,
+                        registrationsSize: size
+                    }
+                }
+            } else {
+                ctx.body = {
+                    code: 500,
+                    msg: '未找到家属注册信息',
+                    data: {
+                        registrations: [],
+                        registrationsSize: 0
+                    }
+                }
+            }
+        }).catch(err => {
+            ctx.throw(err.status | 500, '查询家属注册列表失败')
+        });
     }
 }
 
-let registrations = new Registrations();
-
-module.exports = registrations;
+module.exports = new Registrations();

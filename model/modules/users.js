@@ -38,7 +38,7 @@ class User {
         let self = this;
         typeof field === 'object' && (field = [].push(field));
         return new Promise((resolve, reject) => {
-            self.insertMany(field, (e, doc) => {
+            self.create(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);

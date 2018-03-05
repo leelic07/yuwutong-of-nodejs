@@ -9,8 +9,8 @@ let registrations = new mongoose.Schema({
     name: String,//家属名称
     phone: String,//联系电话
     uuid: String,
-    create_at: {type: Date, default: Date.now()},//创建时间
-    update_at: {type: Date, default: Date.now()},//更新时间
+    create_at: {type: Date, default: Date.now},//创建时间
+    update_at: {type: Date, default: Date.now},//更新时间
     prisoner_number: String,//犯人编号
     relationship: String,//关系
     status: {type: String, default: 'PENDING'},//状态(默认值,PENDING),PENDING:授权中;DENIED:驳回;PASSED:已通过
@@ -24,14 +24,14 @@ class Registrations {
     }
 
     //分页查询家属注册列表
-    find(condition = {}, field = {}, options = {}) {
+    findPage(condition = {}, field = {}, options = {}) {
         let self = this;
-        let page = condition.page, limit = condition.limit;
-        let start = (page - 1) * limit > 0 ? (page - 1) * limit : 0;
-        delete condition.page;
-        delete condition.limit;
+        let page = Number(options.page), limit = Number(options.limit);
+        page = page ? page : 1;
+        limit = limit ? limit : 10;
+        let start = page * limit > 0 ? (page - 1) * limit : 0;
         return new Promise((resolve, reject) => {
-            self.registration.find(condition, field, options).start(start).limit(limit).exec((e, doc) => {
+            self.registration.find(condition, field, {$skip: start, $limit: limit}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -40,17 +40,29 @@ class Registrations {
         });
     }
 
-    //增加家属注册信息
-    create(...field) {
+    //查询所有家属注册列表的记录数
+    findTotal(condition = {}, field = {}, options = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            typeof field === 'object' && (field = [].push(field));
-            self.registration.create(...field, (e, doc) => {
+            self.registration.find(condition, field, options, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc.length);
+            });
+        });
+    }
+
+    //增加家属注册信息
+    create(field = {}) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.registration.create(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc);
-            })
+            });
         });
     }
 }

@@ -31,6 +31,7 @@ class Token {
 
     //验证token
     async verifyToken(ctx, next) {
+        let decode;
         if (ctx.originalUrl === '/authentication') await next();
         else {
             //检查post的信息或者url查询参数或者头信息
@@ -39,18 +40,16 @@ class Token {
             if (token) {
                 // 确认token
                 jwt.verify(token, config.secret, async (err, decoded) => {
-                    if (err) {
-                        ctx.body = {code: 401, msg: 'token信息错误,请重新登录', result: ''};
-                    } else {
-                        // 如果没问题就把解码后的信息保存到请求中，供后面的路由使用
-                        ctx.request.users = decoded._doc;
-                        console.dir(ctx.request.username);
-                        await next();
-                    }
+                    // 如果没问题就把解码后的信息保存到请求中，供后面的路由使用
+                    ctx.request.users = decoded._doc;
+                    decode = decoded;
                 });
+                if (decode)
+                    await next();
+                else ctx.throw(403, '用户未授权或者授权超时，请重新登录');
             } else {
                 // 如果没有token，则返回错误
-                ctx.throw(403, '没有提供token');
+                ctx.throw(403, '用户没有授权');
             }
         }
     }
