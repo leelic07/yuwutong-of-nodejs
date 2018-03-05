@@ -4,27 +4,27 @@
 let mongoose = require('mongoose');
 
 let users = new mongoose.Schema({
+    id: {type: Number, required: true},//用户id
     username: String,//真实姓名
     salt: String,//登录名
     hashed_password: String,//登录密码
     role: Number,//角色id
     jail_id: Number,//监狱id
     created_at: {type: Date, default: Date.now()},//创建时间
-    update_at: {type: Date, default: Date.now()},//更新时间
-    token: String
+    updated_at: {type: Date, default: Date.now()},//更新时间
 });
 
 //用户类型
 class User {
-    constructor() {
+    constructor(mongoose) {
         this.user = mongoose.model('users', users);
     }
 
     //查询用户
-    find(condition = {}, field = {}, options = {}) {
+    find(condition = {}, field = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.user.find(condition, field, options, (e, doc) => {
+            self.user.findOne(condition, field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -33,12 +33,10 @@ class User {
         });
     }
 
-    //新增用户
-    create(field = {}) {
+    create(...field) {
         let self = this;
-        typeof field === 'object' && (field = [].push(field));
         return new Promise((resolve, reject) => {
-            self.create(field, (e, doc) => {
+            self.user.insertMany(field, {$inc: {id: 1}}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -48,11 +46,10 @@ class User {
     }
 
     //修改用户
-    update(condition = {}, filed = {}) {
+    update(condition = {}, field = {}) {
         let self = this;
-        !filed.update_at && (filed.update_at = Date.now());
         return new Promise((resolve, reject) => {
-            self.user.update(condition, filed, (e, doc) => {
+            self.user.update(condition, {updated_at: Date.now(), ...field}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -75,4 +72,4 @@ class User {
     }
 }
 
-module.exports = new User();
+module.exports = new User(mongoose);

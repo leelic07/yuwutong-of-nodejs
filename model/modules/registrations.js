@@ -26,10 +26,10 @@ class Registrations {
     //分页查询家属注册列表
     findPage(condition = {}, field = {}, options = {}) {
         let self = this;
-        let page = Number(options.page), limit = Number(options.limit);
+        let page = Number(options.page), rows = Number(options.rows);
         page = page ? page : 1;
-        limit = limit ? limit : 10;
-        let start = page * limit > 0 ? (page - 1) * limit : 0;
+        rows = rows ? rows : 10;
+        let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
         return new Promise((resolve, reject) => {
             self.registration.find(condition, field, {$skip: start, $limit: limit}, (e, doc) => {
                 if (e) {

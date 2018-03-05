@@ -9,7 +9,6 @@ class Registrations {
 
     //获取家属注册信息
     async registrations(ctx, next) {
-        console.log('query', ctx.request.query);
         // ctx.body = {
         //     code: 200,
         //     msg: 'registrations',
@@ -48,8 +47,8 @@ class Registrations {
         //     }
         // }).catch(err => ctx.throw(err.status | 500, '添加家属注册信息失败'));
 
+        let size;//家属注册列表的总数据条数
         await db.getRegistrations().findPage({}, {}, ctx.request.query).then(async registrations => {
-            let size;//家属注册列表的总数据条数
             if (registrations.length) {
                 await db.getRegistrations().findTotal().then(total => size = total).catch(err => ctx.throw(err.status | 500, "查询家属注册列表失败"));
                 ctx.body = {

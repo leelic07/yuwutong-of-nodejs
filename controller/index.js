@@ -4,6 +4,7 @@
 const token = require('./modules/token');
 const users = require('./modules/users');
 const registrations = require('./modules/registrations');
+const prisoners = require('./modules/prisoners');
 
 class Controller {
     constructor(params) {
@@ -26,12 +27,18 @@ class Controller {
     getRegistrationsController() {
         return this.registrations;
     }
+
+    //获取服刑人员管理控制器
+    getPrisonersController() {
+        return this.prisoners;
+    }
 }
 
 let controller = new Controller({
     token,
     users,
-    registrations
+    registrations,
+    prisoners
 });
 
 module.exports = controller;

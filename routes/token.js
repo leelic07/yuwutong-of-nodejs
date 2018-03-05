@@ -5,7 +5,7 @@ const router = require('koa-router')();
 const controller = require('../controller');
 const tokenController = controller.getTokenController();
 
-router.prefix('/authentication');
+router.prefix('/login');
 
 //获取token
 router.post('/', tokenController.authentication);

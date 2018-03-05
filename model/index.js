@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const config = require('../config');
 const users = require('./modules/users');
 const registrations = require('./modules/registrations');
+const jails = require('./modules/jails');
 
 //数据库对象
 class DataBase {
@@ -35,12 +36,19 @@ class DataBase {
     getRegistrations() {
         return this.registrations;
     }
+
+    //获取监狱的模型
+    getJails() {
+        return this.jails;
+    }
 }
 
 let database = new DataBase({
     users,
-    registrations
+    registrations,
+    jails
 });
+
 //连接数据库
 database.connect(mongoose, config);
 
