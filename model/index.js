@@ -6,6 +6,7 @@ const config = require('../config');
 const users = require('./modules/users');
 const registrations = require('./modules/registrations');
 const jails = require('./modules/jails');
+const prisoners = require('./modules/prisoners');
 
 //数据库对象
 class DataBase {
@@ -41,12 +42,18 @@ class DataBase {
     getJails() {
         return this.jails;
     }
+
+    //获取服刑人员管理的模型
+    getPrisoners() {
+        return this.prisoners;
+    }
 }
 
 let database = new DataBase({
     users,
     registrations,
-    jails
+    jails,
+    prisoners
 });
 
 //连接数据库

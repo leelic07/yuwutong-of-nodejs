@@ -96,7 +96,7 @@ class Token {
                     salt: req.username,
                     hashed_password: req.password,
                     jail_id: Number(jail.id)
-                }, {id: 1, role: 1, '_id': 0, '__v': 0}).then(user => {
+                }, {'_id': 0, '__v': 0, hashed_password: 0}).then(user => {
                     if (user) {
                         let token = jwt.sign({
                             jail_id: jail.id,
@@ -127,8 +127,7 @@ class Token {
     //验证token
     async verifyToken(ctx, next) {
         let decode;
-        if (ctx.originalUrl === '/users/login') await
-            next();
+        if (ctx.originalUrl === '/users/login') await next();
         else {
             //检查post的信息或者url查询参数或者头信息
             let token = ctx.request.body.token || ctx.request.query.token || ctx.request.header['authorization'];
@@ -138,7 +137,7 @@ class Token {
                 jwt.verify(token, config.secret, async (err, decoded) => {
                     // 如果没问题就把解码后的信息保存到请求中，供后面的路由使用
                     if (!err) {
-                        ctx.request.user = decoded._doc;
+                        ctx.request.user = decoded;
                         decode = decoded;
                     }
                 });

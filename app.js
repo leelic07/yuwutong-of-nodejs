@@ -11,6 +11,7 @@ const index = require('./routes/index');
 const users = require('./routes/users');
 const token = require('./routes/token');
 const registrations = require('./routes/registrations');
+const prisoners = require('./routes/prisoners');
 //引用数据库模型
 require('./model/index');
 // error handler
@@ -44,6 +45,7 @@ app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 app.use(token.routes(), token.allowedMethods());
 app.use(registrations.routes(), registrations.allowedMethods());
+app.use(prisoners.routes(), prisoners.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

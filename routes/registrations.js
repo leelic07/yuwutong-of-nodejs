@@ -5,8 +5,8 @@ const router = require('koa-router')();
 const controller = require('../controller');
 const registrationsController = controller.getRegistrationsController();
 
-// router.prefix('registrations');
+router.prefix('/registrations');
 
-router.get('/registrations', registrationsController.registrations);
+router.get('/', registrationsController.registrations);
 
 module.exports = router;

@@ -14,10 +14,10 @@ let prisoners = new mongoose.Schema({
     jail_id: Number,//监狱id
     prison_term_started_at: Date,//刑期开始日期
     prisoner_term_ended_at: Date,//刑期结束日期
-    created_at: {type: Date, default: Date.now},//创建日期
-    updated_at: {type: Date, default: Date.now},//更新日期
+    created_at: {type: Date, default: new Date()},//创建日期
+    updated_at: {type: Date, default: new Date()},//更新日期
     prison_area: String,//监区名称
-    sys_flag: Number//是否删除（1：未删除；0：已删除）
+    sys_flag: {type: Number, default: 1}//是否删除（1：未删除；0：已删除）
 });
 
 class Prisoners {
@@ -29,11 +29,14 @@ class Prisoners {
     findPage(condition = {}, field = {}, options = {}) {
         let self = this;
         let page = Number(options.page), rows = Number(options.rows);
-        page = page ? page : 1;
-        rows = rows ? rows : 10;
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
+        delete options.page;
+        delete options.rows;
         return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, field, {$skip: start, $limit: rows}, (e, doc) => {
+            self.prisoner.find(condition, {
+                '_id': 0,
+                '__v': 0, ...field
+            }, options).skip(start).limit(rows).exec((e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -72,7 +75,7 @@ class Prisoners {
     update(condition = {}, field = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.prisoner.update(condition, {updated_at: Date.now(), ...field}, (e, doc) => {
+            self.prisoner.update(condition, {updated_at: new Date(), ...field}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);

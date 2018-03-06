@@ -3,10 +3,10 @@
  */
 const router = require('koa-router')();
 const controller = require('../controller');
-const registrationsController = controller.getRegistrationsController();
+const prisonersController = controller.getPrisonersController();
 
-// router.prefix('registrations');
+router.prefix('/prisoners');
 
-router.get('/registrations', registrationsController.registrations);
+router.get('/page', prisonersController.prisoners);
 
 module.exports = router;

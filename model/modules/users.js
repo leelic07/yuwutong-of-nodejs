@@ -33,10 +33,11 @@ class User {
         });
     }
 
+    //新增用户
     create(...field) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.user.insertMany(field, {$inc: {id: 1}}, (e, doc) => {
+            self.user.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
