@@ -5,7 +5,8 @@ let mongoose = require('mongoose');
 
 //犯人家属注册表
 let registrations = new mongoose.Schema({
-    jail_id: Number,//监狱id
+    id: {type: Number, required: true},//家属注册id
+    jail_id: {type: Number, ref: 'jails'},//监狱id
     name: String,//家属名称
     phone: String,//联系电话
     uuid: String,

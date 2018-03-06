@@ -9,7 +9,7 @@ let users = new mongoose.Schema({
     salt: String,//登录名
     hashed_password: String,//登录密码
     role: Number,//角色id
-    jail_id: Number,//监狱id
+    jail_id: {type: Number, ref: 'jails'},//监狱id
     created_at: {type: Date, default: Date.now()},//创建时间
     updated_at: {type: Date, default: Date.now()},//更新时间
 });

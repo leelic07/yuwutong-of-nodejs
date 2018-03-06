@@ -1,41 +1,38 @@
 /**
- * Created by Administrator on 2018/3/5/005.
+ * Created by Administrator on 2018/3/6/006.
  */
 const mongoose = require('mongoose');
 const util = require('../../util');
 
-let prisoners = new mongoose.Schema({
-    id: {type: Number, required: true},//罪犯id
-    prisoner_number: String,//罪犯编号
-    name: String,//罪犯名称
-    gender: String,//罪犯性别
-    crimes: String,//犯罪说明
-    additional_punishment: String,//附加刑
-    original_sentence: String,//原判
-    jail_id: {type: Number, ref: 'jails'},//监狱id
-    prison_term_started_at: Date,//刑期开始日期
-    prison_term_ended_at: Date,//刑期结束日期
-    created_at: {type: Date, default: new Date()},//创建日期
-    updated_at: {type: Date, default: new Date()},//更新日期
-    prison_area: String,//监区名称
-    sys_flag: {type: Number, default: 1}//是否删除（1：未删除；0：已删除）
+let families = new mongoose.Schema({
+    id: {type: Number, required: true},//罪犯家属id
+    prisoner_id: {type: Number, ref: 'prisoners'},//犯人id
+    name: String,//家属名称
+    uuid: String,//身份证号码
+    phone: String,//联系电话
+    relationship: String,//关系
+    created_at: {type: Date, default: Date.now},//创建时间
+    updated_at: {type: Date, default: Date.now},//更新时间
+    image_url: String,//家属头像路径
+    balance: {type: Number, default: 0.00},//余额（默认值：0.00）
+    last_trade_no: String//截止交易号
 });
 
-class Prisoners {
+class Families {
     constructor(mongoose) {
-        this.prisoner = mongoose.model('prisoners', prisoners);
+        this.families = mongoose.model('families', families);
     }
 
-    //分页查询服刑人员信息列表
+    //分页查询家属信息列表
     findPage(query = {}) {
         let self = this;
         let page = Number(query.page), rows = Number(query.rows);
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
         let condition = {};
         query.name ? condition.name = query.name : '';
-        query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
+        query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, {
+            self.families.find(condition, {
                 '_id': 0,
                 '__v': 0
             }).skip(start).limit(rows).exec((e, doc) => {
@@ -54,9 +51,9 @@ class Prisoners {
         let self = this;
         let condition = {};
         query.name ? condition.name = query.name : '';
-        query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
+        query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, (e, doc) => {
+            self.families.find(condition, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -65,11 +62,24 @@ class Prisoners {
         })
     }
 
-    //新增服刑人员信息
+    //通过罪犯id查询家属信息
+    findByPrisonerId(query = {}) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.families.find(query, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(util.transformArr(doc));
+            });
+        })
+    }
+
+    //新增家属信息
     create(...field) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.prisoner.insertMany(field, (e, doc) => {
+            self.families.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -77,19 +87,6 @@ class Prisoners {
             });
         })
     }
-
-    //修改服刑人员信息
-    update(condition = {}, field = {}) {
-        let self = this;
-        return new Promise((resolve, reject) => {
-            self.prisoner.update(condition, {updated_at: new Date(), ...field}, (e, doc) => {
-                if (e) {
-                    console.log(e);
-                    reject(e);
-                } else resolve(doc);
-            })
-        })
-    }
 }
 
-module.exports = new Prisoners(mongoose);
+module.exports = new Families(mongoose);
