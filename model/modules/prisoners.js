@@ -2,11 +2,13 @@
  * Created by Administrator on 2018/3/5/005.
  */
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const util = require('../../util');
 
-let prisoners = new mongoose.Schema({
-    id: {type: Number, required: true},//罪犯id
+let prisoners = new Schema({
+    id: {type: Number, required: true, unique: true},//罪犯id
     prisoner_number: String,//罪犯编号
+    families: [{type: Number, ref: 'families'}],//罪犯对应的家属信息
     name: String,//罪犯名称
     gender: String,//罪犯性别
     crimes: String,//犯罪说明
@@ -26,12 +28,28 @@ class Prisoners {
         this.prisoner = mongoose.model('prisoners', prisoners);
     }
 
-    //分页查询服刑人员信息列表
-    findPage(query = {}) {
+    //查询罪犯信息
+    find(request = {}) {
         let self = this;
+        let condition = {jail_id: request.user.jail_id};
+        return new Promise((resolve, reject) => {
+            self.prisoner.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
+                    if (e) {
+                        console.log(e);
+                        reject(e);
+                    } else resolve(util.transformArr(doc));
+                }
+            )
+        })
+    }
+
+    //分页查询服刑人员信息列表
+    findPage(request = {}) {
+        let self = this;
+        let query = request.query;
         let page = Number(query.page), rows = Number(query.rows);
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
-        let condition = {};
+        let condition = {jail_id: request.user.jail_id};
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
@@ -50,9 +68,10 @@ class Prisoners {
     }
 
     //查询服刑人员信息列表的记录数
-    findTotal(query = {}) {
+    findTotal(request = {}) {
         let self = this;
-        let condition = {};
+        let query = request.query;
+        let condition = {jail_id: request.user.jail_id};
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
@@ -60,7 +79,7 @@ class Prisoners {
                 if (e) {
                     console.log(e);
                     reject(e);
-                } else resolve(doc);
+                } else resolve(doc.length);
             })
         })
     }
@@ -82,7 +101,7 @@ class Prisoners {
     update(condition = {}, field = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.prisoner.update(condition, {updated_at: new Date(), ...field}, (e, doc) => {
+            self.prisoner.update(condition, {updated_at: Date.now, ...field}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);

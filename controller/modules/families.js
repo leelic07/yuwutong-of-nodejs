@@ -18,7 +18,8 @@ class Families {
         //     relationship: '父子',
         //     image_url: '/upload/images/head/ding.png',
         //     balance: 43.00,
-        //     last_trade_no: '123654'
+        //     last_trade_no: '123654',
+        //     prisoners: 1
         // }, {
         //     id: 2,
         //     prisoner_id: 2,
@@ -28,7 +29,8 @@ class Families {
         //     relationship: '母子',
         //     image_url: '/upload/images/head/xiao.png',
         //     balance: 91.50,
-        //     last_trade_no: '192654'
+        //     last_trade_no: '192654',
+        //     prisoners: 2
         // }, {
         //     id: 3,
         //     prisoner_id: 3,
@@ -38,13 +40,14 @@ class Families {
         //     relationship: '兄弟',
         //     image_url: '/upload/images/head/luo.png',
         //     balance: 11.00,
-        //     last_trade_no: '185904'
+        //     last_trade_no: '185904',
+        //     prisoners: 3
         // }).then(result => {
         //     if (result) {
         //         ctx.body = {
         //             code: 200,
         //             msg: '添加罪犯家属信息成功',
-        //             data: ''
+        //             data: result
         //         }
         //     } else {
         //         ctx.body = {
@@ -56,40 +59,49 @@ class Families {
         // }).catch(err => ctx.throw(500, err.message));
 
         let size;//服刑人员信息列表的总记录数
-        await db.getFamilies().findPage({
-            ...ctx.request.query,
-            jail_id: ctx.request.user.jail_id
-        }).then(async families => {
+        let familiesList = [];//罪犯家属列表
+        let prisonersList = [];//罪犯列表
+        //查找罪犯家属列表
+        await db.getFamilies().findPage(ctx.request).then(async families => {
             if (families.length) {
-                await db.getFamilies().findTotal(ctx.request.query).then(total => size = total.length).catch(err => ctx.throw(err.status || 500, err.message));
-                // families.forEach(async (item, index, arr) => {
-                //     await db.getPrisoners().findTotal({id: item.prisonerId}).then(prisoner => {
-                //         if (prisoner.length) item.prisoners = prisoner;
-                //         else item.prisoners = [];
-                //         if (index === (arr.length - 1)) ctx.body = {
-                //             code: 200,
-                //             msg: '查询罪犯家属信息成功',
-                //             data: {
-                //                 families: arr,
-                //                 familiesSize: size ? size : 0
-                //             }
-                //         }
-                //     }).catch(err => ctx.throw(500, err.message));
-                // });
-                ctx.body = {
-                    code: 200,
-                    msg: '查询罪犯家属信息成功',
-                    data: {
-                        families: families,
-                        familiesSize: size ? size : 0
-                    }
-                }
+                await db.getFamilies().findTotal(ctx.request).then(total => size = total).catch(err => ctx.throw(err.status || 500, err.message));
+                familiesList = families;
             } else ctx.body = {
                 code: 404,
                 msg: '未找到罪犯家属信息',
                 data: ''
             }
         }).catch(err => ctx.throw(err.status || 500, err.message));
+        //查找罪犯列表
+        await db.getPrisoners().find(ctx.request).then(prisoners => {
+            if (prisoners.length) prisonersList = prisoners;
+            else ctx.body = {
+                code: 404,
+                msg: '未找到罪犯信息',
+                data: ''
+            }
+        }).catch(err => ctx.throw(500, err.message));
+        //寻找prisonerId对应的罪犯信息
+        familiesList.forEach(fam => {
+            fam.prisoners = prisonersList.find(pri => fam.prisonerId === pri.id);
+        });
+        if (familiesList.length) {//查询到家属信息列表
+            ctx.body = {
+                code: 200,
+                msg: '查询家属信息成功',
+                data: {
+                    families: familiesList,
+                    familiesSize: size ? size : 0
+                }
+            }
+        } else ctx.body = {//未查询到家属信息列表
+            code: 404,
+            msg: '未找到家属信息',
+            data: {
+                families: [],
+                familiesSize: 0
+            }
+        }
     }
 }
 

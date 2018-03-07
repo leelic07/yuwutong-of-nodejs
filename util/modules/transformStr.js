@@ -9,14 +9,24 @@ module.exports = {
     },
     //将对象数组中的所有的下划线字符串都转换成驼峰字符串
     transformArr(arr){
+        let newArr = [];
         arr.forEach(item => {
             let doc = item._doc;
             let docTemp = {};
             for (let key in doc) {
                 docTemp[this.transformStr(key)] = doc[key];
             }
-            item._doc = docTemp;
+            newArr.push(docTemp);
         });
-        return arr;
+        return newArr;
+    },
+    //将对象中的所有的下划线字符串都转换成驼峰字符串
+    transformObj(obj){
+        let doc = obj._doc;
+        let docTemp = {};
+        for (let key in doc) {
+            docTemp[this.transformStr(key)] = doc[key];
+        }
+        return docTemp;
     }
 };

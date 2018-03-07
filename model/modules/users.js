@@ -1,9 +1,11 @@
 /**
  * Created by Administrator on 2018/3/1/001.
  */
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
-let users = new mongoose.Schema({
+let users = new Schema({
     id: {type: Number, required: true},//用户id
     username: String,//真实姓名
     salt: String,//登录名

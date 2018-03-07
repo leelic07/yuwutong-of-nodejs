@@ -1,12 +1,13 @@
 /**
  * Created by Administrator on 2018/3/2/002.
  */
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 //犯人家属注册表
-let registrations = new mongoose.Schema({
-    id: {type: Number, required: true},//家属注册id
-    jail_id: {type: Number, ref: 'jails'},//监狱id
+let registrations = new Schema({
+    id: Schema.Types.ObjectId,//家属注册id
+    jail_id: {type: Schema.Types.ObjectId, ref: 'jails'},//监狱id
     name: String,//家属名称
     phone: String,//联系电话
     uuid: String,

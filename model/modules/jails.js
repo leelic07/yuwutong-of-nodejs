@@ -2,9 +2,10 @@
  * Created by Administrator on 2018/3/5/005.
  */
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-let jails = new mongoose.Schema({
-    id: String,//监狱id
+let jails = new Schema({
+    id: {type: Number, required: true},//监狱id
     prison: String,//监狱代码
     title: String,//监狱名称
     description: String,//监狱描述

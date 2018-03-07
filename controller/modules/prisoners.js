@@ -20,7 +20,8 @@ class Prisoners {
         //     jail_id: 1,
         //     prison_term_started_at: 1399935986349,
         //     prison_term_ended_at: 1499935986349,
-        //     prison_area: '一监区'
+        //     prison_area: '一监区',
+        //     families: []
         // }, {
         //     id: 2,
         //     prisoner_number: '410001',
@@ -32,7 +33,8 @@ class Prisoners {
         //     jail_id: 1,
         //     prison_term_started_at: 1399935986349,
         //     prison_term_ended_at: 1499935986349,
-        //     prison_area: '二监区'
+        //     prison_area: '二监区',
+        //     families: []
         // }, {
         //     id: 3,
         //     prisoner_number: '410002',
@@ -44,13 +46,14 @@ class Prisoners {
         //     jail_id: 1,
         //     prison_term_started_at: 1399935986349,
         //     prison_term_ended_at: 1499935986349,
-        //     prison_area: '二监区'
+        //     prison_area: '二监区',
+        //     families: []
         // }).then(result => {
         //     if (result) {
         //         ctx.body = {
         //             code: 200,
         //             msg: '新增服刑人员成功',
-        //             data: ''
+        //             data: result
         //         }
         //     } else ctx.body = {
         //         code: 500,
@@ -60,12 +63,9 @@ class Prisoners {
         // }).catch(err => ctx.throw(err.status || 500, err.message));
 
         let size;//服刑人员信息列表的总记录数
-        await db.getPrisoners().findPage({
-            ...ctx.request.query,
-            jail_id: ctx.request.user.jail_id
-        }).then(async prisoners => {
+        await db.getPrisoners().findPage(ctx.request).then(async prisoners => {
             if (prisoners.length) {
-                await db.getPrisoners().findTotal(ctx.request.query).then(total => size = total.length).catch(err => ctx.throw(err.status || 500, err.message));
+                await db.getPrisoners().findTotal(ctx.request).then(total => size = total).catch(err => ctx.throw(err.status || 500, err.message));
                 ctx.body = {
                     code: 200,
                     msg: '查询服刑人员信息成功',

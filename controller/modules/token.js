@@ -4,6 +4,8 @@
 const db = require('../../model');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 class Token {
     constructor() {
@@ -37,7 +39,7 @@ class Token {
         //         ctx.body = {
         //             code: 200,
         //             msg: '添加用户成功',
-        //             data: ''
+        //             data: result
         //         }
         //     } else {
         //         ctx.body = {
@@ -80,7 +82,7 @@ class Token {
         //     if (result) ctx.body = {
         //         code: 200,
         //         msg: '添加监狱成功',
-        //         data: ''
+        //         data: result
         //     };
         //     else ctx.body = {
         //         code: 500,
