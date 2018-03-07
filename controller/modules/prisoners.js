@@ -63,23 +63,40 @@ class Prisoners {
         // }).catch(err => ctx.throw(err.status || 500, err.message));
 
         let size;//服刑人员信息列表的总记录数
+        let prisonersList = [];//罪犯信息列表
+        let familiesList = [];//家属信息列表
         await db.getPrisoners().findPage(ctx.request).then(async prisoners => {
             if (prisoners.length) {
                 await db.getPrisoners().findTotal(ctx.request).then(total => size = total).catch(err => ctx.throw(err.status || 500, err.message));
-                ctx.body = {
-                    code: 200,
-                    msg: '查询服刑人员信息成功',
-                    data: {
-                        prisoners: prisoners,
-                        prisonersSize: size ? size : 0
-                    }
-                }
+                prisonersList = prisoners;
             } else ctx.body = {
                 code: 404,
                 msg: '未找到服刑人员信息',
-                data: ''
+                data: {}
             }
         }).catch(err => ctx.throw(err.status || 500, err.message));
+        //查询家属信息列表
+        await db.getFamilies().find().then(families => {
+            if (families.length) {
+                familiesList = families;
+            } else ctx.body = {
+                code: 404,
+                msg: '未找到家属信息',
+                data: {}
+            }
+        }).catch(err => ctx.throw(500, err.message));
+        //将对应相同的罪犯的家属信息加入到罪犯列表当中
+        prisonersList.forEach(prisoner => {
+            prisoner.families = familiesList.filter(family => family.prisonerId === prisoner.id);
+        });
+        ctx.body = {
+            code: 200,
+            msg: '查询服刑人员信息成功',
+            data: {
+                prisoners: prisonersList,
+                prisonersSize: size ? size : 0
+            }
+        }
     }
 }
 

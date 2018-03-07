@@ -82,24 +82,15 @@ class Families {
             }
         }).catch(err => ctx.throw(500, err.message));
         //寻找prisonerId对应的罪犯信息
-        familiesList.forEach(fam => {
-            fam.prisoners = prisonersList.find(pri => fam.prisonerId === pri.id);
+        familiesList.forEach(family => {
+            family.prisoners = prisonersList.find(prisoner => family.prisonerId === prisoner.id);
         });
-        if (familiesList.length) {//查询到家属信息列表
-            ctx.body = {
-                code: 200,
-                msg: '查询家属信息成功',
-                data: {
-                    families: familiesList,
-                    familiesSize: size ? size : 0
-                }
-            }
-        } else ctx.body = {//未查询到家属信息列表
-            code: 404,
-            msg: '未找到家属信息',
+        ctx.body = {
+            code: 200,
+            msg: '查询家属信息成功',
             data: {
-                families: [],
-                familiesSize: 0
+                families: familiesList,
+                familiesSize: size ? size : 0
             }
         }
     }

@@ -13,6 +13,7 @@ const token = require('./routes/token');
 const registrations = require('./routes/registrations');
 const prisoners = require('./routes/prisoners');
 const families = require('./routes/families');
+const accounts = require('./routes/accounts');
 //引用数据库模型
 require('./model/index');
 // error handler
@@ -48,7 +49,7 @@ app.use(token.routes(), token.allowedMethods());
 app.use(registrations.routes(), registrations.allowedMethods());
 app.use(prisoners.routes(), prisoners.allowedMethods());
 app.use(families.routes(), families.allowedMethods());
-
+app.use(accounts.routes(), accounts.allowedMethods());
 // error-handling
 app.on('error', (err, ctx) => {
     console.error('server error', err, ctx);

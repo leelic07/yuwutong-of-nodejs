@@ -8,7 +8,7 @@ const util = require('../../util');
 let prisoners = new Schema({
     id: {type: Number, required: true, unique: true},//罪犯id
     prisoner_number: String,//罪犯编号
-    families: [{type: Number, ref: 'families'}],//罪犯对应的家属信息
+    // families: [{type: Number, ref: 'families'}],//罪犯对应的家属信息
     name: String,//罪犯名称
     gender: String,//罪犯性别
     crimes: String,//犯罪说明
@@ -32,12 +32,28 @@ class Prisoners {
     find(request = {}) {
         let self = this;
         let condition = {jail_id: request.user.jail_id};
+        // request.query ? Object.assign(condition, request.query) : '';
         return new Promise((resolve, reject) => {
             self.prisoner.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
                     if (e) {
                         console.log(e);
                         reject(e);
                     } else resolve(util.transformArr(doc));
+                }
+            )
+        })
+    }
+
+    //查询罪犯信息
+    findOrigin(request = {}) {
+        let self = this;
+        let condition = {jail_id: request.user.jail_id};
+        return new Promise((resolve, reject) => {
+            self.prisoner.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
+                    if (e) {
+                        console.log(e);
+                        reject(e);
+                    } else resolve(doc);
                 }
             )
         })
@@ -62,6 +78,30 @@ class Prisoners {
                     reject(e);
                 } else {
                     resolve(util.transformArr(doc));
+                }
+            });
+        });
+    }
+
+    //分页查询服刑人员信息列表
+    findPageOrigin(request = {}) {
+        let self = this;
+        let query = request.query;
+        let page = Number(query.page), rows = Number(query.rows);
+        let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
+        let condition = {jail_id: request.user.jail_id};
+        query.name ? condition.name = query.name : '';
+        query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
+        return new Promise((resolve, reject) => {
+            self.prisoner.find(condition, {
+                '_id': 0,
+                '__v': 0
+            }).skip(start).limit(rows).exec((e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else {
+                    resolve(doc);
                 }
             });
         });

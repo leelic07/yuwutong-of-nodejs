@@ -6,6 +6,7 @@ const users = require('./modules/users');
 const registrations = require('./modules/registrations');
 const prisoners = require('./modules/prisoners');
 const families = require('./modules/families');
+const accounts = require('./modules/accounts');
 
 class Controller {
     constructor(params) {
@@ -38,6 +39,11 @@ class Controller {
     getFamiliesController() {
         return this.families;
     }
+
+    //获取罪犯账户列表
+    getAccountsController() {
+        return this.accounts;
+    }
 }
 
 let controller = new Controller({
@@ -45,7 +51,8 @@ let controller = new Controller({
     users,
     registrations,
     prisoners,
-    families
+    families,
+    accounts
 });
 
 module.exports = controller;
