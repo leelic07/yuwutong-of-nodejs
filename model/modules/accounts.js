@@ -18,14 +18,14 @@ class Accounts {
     }
 
     //查询罪犯账户信息
-    findOrigin(request = {}) {
+    find(request = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
             self.accounts.find(request, {'_id': 0, '__v': 0}, (e, doc) => {
                     if (e) {
                         console.log(e);
                         reject(e);
-                    } else resolve(doc);
+                    } else resolve(util.transformArr(doc));
                 }
             )
         })

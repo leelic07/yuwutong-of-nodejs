@@ -7,7 +7,7 @@ const registrations = require('./modules/registrations');
 const prisoners = require('./modules/prisoners');
 const families = require('./modules/families');
 const accounts = require('./modules/accounts');
-
+const accountDetails = require('./modules/account_details');
 class Controller {
     constructor(params) {
         for (let key in params) {
@@ -40,9 +40,14 @@ class Controller {
         return this.families;
     }
 
-    //获取罪犯账户列表
+    //获取罪犯账户列表的控制器
     getAccountsController() {
         return this.accounts;
+    }
+
+    //获取罪犯账户明细的控制器
+    getAccountDetailsController() {
+        return this.accountDetails;
     }
 }
 
@@ -52,7 +57,8 @@ let controller = new Controller({
     registrations,
     prisoners,
     families,
-    accounts
+    accounts,
+    accountDetails
 });
 
 module.exports = controller;

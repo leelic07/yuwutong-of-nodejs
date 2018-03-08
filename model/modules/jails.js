@@ -6,22 +6,22 @@ const Schema = mongoose.Schema;
 
 let jails = new Schema({
     id: {type: Number, required: true},//监狱id
-    prison: String,//监狱代码
-    title: String,//监狱名称
-    description: String,//监狱描述
-    street: String,//街道门号
-    district: String,//街区
-    city: String,//城市
-    state: String,//省分
-    zipcode: String,//邮政编号
-    accid: String,
+    prison: {type: String, default: ''},//监狱代码
+    title: {type: String, default: ''},//监狱名称
+    description: {type: String, default: ''},//监狱描述
+    street: {type: String, default: ''},//街道门号
+    district: {type: String, default: ''},//街区
+    city: {type: String, default: ''},//城市
+    state: {type: String, default: ''},//省分
+    zipcode: {type: String, default: ''},//邮政编号
+    accid: {type: String, default: ''},
     created_at: {type: Date, default: Date.now},//创建时间
     updated_at: {type: Date, default: Date.now},//更新时间
-    image_file_name: String,//文件名称
-    image_content_type: String,//文件类型
-    image_file_size: Number,//文件大小
+    image_file_name: {type: String, default: ''},//文件名称
+    image_content_type: {type: String, default: ''},//文件类型
+    image_file_size: {type: Number, default: 0},//文件大小
     image_updated_at: {type: Date, default: Date.now},//文件更新时间
-    image_url: {type: String, default: '/upload/images/'}//文件路径地址
+    image_url: {type: String, default: '/upload/images/default.png'}//文件路径地址
 });
 
 class Jails {

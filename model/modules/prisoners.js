@@ -9,17 +9,17 @@ let prisoners = new Schema({
     id: {type: Number, required: true, unique: true},//罪犯id
     prisoner_number: String,//罪犯编号
     // families: [{type: Number, ref: 'families'}],//罪犯对应的家属信息
-    name: String,//罪犯名称
-    gender: String,//罪犯性别
-    crimes: String,//犯罪说明
-    additional_punishment: String,//附加刑
-    original_sentence: String,//原判
+    name: {type: String, default: ''},//罪犯名称
+    gender: {type: String, default: ''},//罪犯性别
+    crimes: {type: String, default: ''},//犯罪说明
+    additional_punishment: {type: String, default: ''},//附加刑
+    original_sentence: {type: String, default: ''},//原判
     jail_id: {type: Number, ref: 'jails'},//监狱id
-    prison_term_started_at: Date,//刑期开始日期
-    prison_term_ended_at: Date,//刑期结束日期
+    prison_term_started_at: {type: Date, default: ''},//刑期开始日期
+    prison_term_ended_at: {type: Date, default: ''},//刑期结束日期
     created_at: {type: Date, default: new Date()},//创建日期
     updated_at: {type: Date, default: new Date()},//更新日期
-    prison_area: String,//监区名称
+    prison_area: {type: String, default: ''},//监区名称
     sys_flag: {type: Number, default: 1}//是否删除（1：未删除；0：已删除）
 });
 

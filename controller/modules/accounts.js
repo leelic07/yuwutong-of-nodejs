@@ -41,7 +41,7 @@ class Accounts {
         let accountsList = [];//罪犯账户列表
         let prisonersList = [];//罪犯信息列表
         //获取罪犯账户信息
-        await db.getAccounts().findOrigin().then(accounts => {
+        await db.getAccounts().find().then(accounts => {
             if (accounts.length) {
                 accountsList = accounts;
             } else ctx.body = {
@@ -51,7 +51,7 @@ class Accounts {
             }
         }).catch(err => ctx.throw(500, err.message));
         //获取罪犯信息列表
-        await db.getPrisoners().findPageOrigin(ctx.request).then(async prisoners => {
+        await db.getPrisoners().findPage(ctx.request).then(async prisoners => {
             if (prisoners.length) {
                 await db.getPrisoners().findTotal(ctx.request).then(total => size = total).catch(err => ctx.throw(500, err.message));
                 prisonersList = prisoners;
@@ -63,8 +63,8 @@ class Accounts {
         }).catch(err => ctx.throw(500, err.message));
         //将罪犯账户信息和罪犯信息合并在一起
         prisonersList.forEach(prisoner => {
-            let account = accountsList.find(account => account._doc.prisoner_id === prisoner._doc.id);
-            Object.assign(prisoner._doc, account._doc);
+            let account = accountsList.find(account => account.prisonerId === prisoner.id);
+            Object.assign(prisoner, account);
         });
         ctx.body = {
             code: 200,

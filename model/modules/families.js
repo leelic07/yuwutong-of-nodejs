@@ -7,17 +7,17 @@ const util = require('../../util');
 
 let families = new Schema({
     id: {type: Number, required: true, unique: true},//罪犯家属id
-    prisoner_id: Number,//犯人id
+    prisoner_id: {type: Number, ref: 'prisoners'},//犯人id
     // prisoners: {type: Object, default: {}},//家属对应罪犯信息
-    name: String,//家属名称
-    uuid: String,//身份证号码
-    phone: String,//联系电话
-    relationship: String,//关系
+    name: {type: String, default: ''},//家属名称
+    uuid: {type: String, default: ''},//身份证号码
+    phone: {type: String, default: ''},//联系电话
+    relationship: {type: String, default: ''},//关系
     created_at: {type: Date, default: Date.now},//创建时间
     updated_at: {type: Date, default: Date.now},//更新时间
-    image_url: String,//家属头像路径
+    image_url: {type: String, default: '/upload/images/default.png'},//家属头像路径
     balance: {type: Number, default: 0.00},//余额（默认值：0.00）
-    last_trade_no: String//截止交易号
+    last_trade_no: {type: String, default: ''}//截止交易号
 });
 
 class Families {

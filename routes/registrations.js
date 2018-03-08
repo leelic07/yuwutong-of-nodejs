@@ -7,6 +7,8 @@ const registrationsController = controller.getRegistrationsController();
 
 router.prefix('/registrations');
 
-router.get('/', registrationsController.registrations);
+router.get('/page', registrationsController.registrations);
+
+router.post('/authorize', registrationsController.authorize);
 
 module.exports = router;

@@ -7,10 +7,10 @@ const ObjectId = Schema.Types.ObjectId;
 
 let users = new Schema({
     id: {type: Number, required: true},//用户id
-    username: String,//真实姓名
-    salt: String,//登录名
-    hashed_password: String,//登录密码
-    role: Number,//角色id
+    username: {type: String, default: ''},//真实姓名
+    salt: {type: String, default: ''},//登录名
+    hashed_password: {type: String, default: ''},//登录密码
+    role: {type: Number, default: ''},//角色id
     jail_id: {type: Number, ref: 'jails'},//监狱id
     created_at: {type: Date, default: Date.now()},//创建时间
     updated_at: {type: Date, default: Date.now()},//更新时间
