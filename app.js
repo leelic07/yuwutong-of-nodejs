@@ -14,6 +14,7 @@ const registrations = require('./routes/registrations');
 const prisoners = require('./routes/prisoners');
 const families = require('./routes/families');
 const accounts = require('./routes/accounts');
+const meetings = require('./routes/meetings');
 //引用数据库模型
 require('./model/index');
 // error handler
@@ -50,6 +51,7 @@ app.use(registrations.routes(), registrations.allowedMethods());
 app.use(prisoners.routes(), prisoners.allowedMethods());
 app.use(families.routes(), families.allowedMethods());
 app.use(accounts.routes(), accounts.allowedMethods());
+app.use(meetings.routes(), meetings.allowedMethods());
 // error-handling
 app.on('error', (err, ctx) => {
     console.error('server error', err, ctx);

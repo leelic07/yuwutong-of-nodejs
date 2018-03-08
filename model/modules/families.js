@@ -25,13 +25,32 @@ class Families {
         this.families = mongoose.model('families', families);
     }
 
-    //查询家属信息
-    find(request = {}) {
+    findByNameOrUuid(request = {}) {
         let self = this;
-        let query = {};
-        request.query ? query = request.query : '';
+        let query = request.query;
+        let condition = {};
+        query.name ? condition.name = query.name : '';
+        query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.families.find(query, {'_id': 0, '__v': 0}, (e, doc) => {
+            self.families.find(condition, {
+                '_id': 0,
+                '__v': 0
+            }).exec((e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else {
+                    resolve(util.transformArr(doc));
+                }
+            });
+        });
+    }
+
+    //查询家属信息
+    find() {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.families.find({}, {'_id': 0, '__v': 0}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);

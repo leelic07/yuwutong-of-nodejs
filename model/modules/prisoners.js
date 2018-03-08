@@ -28,11 +28,30 @@ class Prisoners {
         this.prisoner = mongoose.model('prisoners', prisoners);
     }
 
+    findByPrisonerNumber(request = {}) {
+        let self = this;
+        let query = request.query;
+        let condition = {jail_id: request.user.jail_id};
+        query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
+        return new Promise((resolve, reject) => {
+            self.prisoner.find(condition, {
+                '_id': 0,
+                '__v': 0
+            }).exec((e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else {
+                    resolve(util.transformArr(doc));
+                }
+            });
+        });
+    }
+
     //查询罪犯信息
     find(request = {}) {
         let self = this;
         let condition = {jail_id: request.user.jail_id};
-        // request.query ? Object.assign(condition, request.query) : '';
         return new Promise((resolve, reject) => {
             self.prisoner.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
                     if (e) {

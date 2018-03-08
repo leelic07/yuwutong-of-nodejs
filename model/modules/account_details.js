@@ -19,7 +19,7 @@ class AccountDetails {
     }
 
     //根据id查询罪犯账户明细
-    findByAccountId(id) {
+    findByAccountId(id = '') {
         let self = this;
         let account_id = id;
         return new Promise((resolve, reject) => {

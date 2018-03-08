@@ -42,6 +42,17 @@ class Registrations {
         //     status: 'PENDING',//状态(默认值,PENDING),PENDING:授权中;DENIED:驳回;PASSED:已通过
         //     remarks: '',//备注
         //     gender: '男'//性别
+        // }, {
+        //     id: 4,
+        //     jail_id: 2,//监狱id
+        //     name: '欧阳武',//家属名称
+        //     phone: '18678372977',//联系电话
+        //     uuid: '420134198507234393',
+        //     prisoner_number: '410003',//犯人编号
+        //     relationship: '兄弟',//关系
+        //     status: 'PENDING',//状态(默认值,PENDING),PENDING:授权中;DENIED:驳回;PASSED:已通过
+        //     remarks: '',//备注
+        //     gender: '男'//性别
         // }).then(result => {
         //     if (result) ctx.body = {
         //         code: 200,

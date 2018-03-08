@@ -83,7 +83,7 @@ class Registrations {
         let condition = body.id ? {id: body.id} : {id: ''};
         delete body.id;
         return new Promise((resolve, reject) => {
-            self.registrations.update(condition, {updated_at: Date.now(), body}, (e, doc) => {
+            self.registrations.update(condition, {updated_at: Date.now(), ...body}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
