@@ -8,6 +8,9 @@ let meetings = new mongoose.Schema({
     id: {type: Number, required: true, unique: true},
     terminal_id: {type: Number, ref: 'terminals'},
     family_id: {type: Number, ref: 'families'},
+    name: {type: String, default: ''},
+    prisoner_number: {type: String, default: ''},
+    uuid: {type: String, default: ''},
     application_date: {type: Date, default: Date.now},
     status: {type: String, default: 'PENDING'},
     meeting_time: {type: Date, default: ''},
@@ -23,8 +26,15 @@ meetings.statics = {
         let query = request.query;
         let page = Number(query.page), rows = Number(query.rows);
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
+        let condition = {};
+        query.name ? condition.name = query.name : '';
+        query.prisonerNumber ? condition.prisonerNumber = query.prisonerNumber : '';
+        query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.find({}, {'_id': 0, '__v': 0}).skip(start).limit(rows).exec((e, doc) => {
+            self.find(condition, {
+                '_id': 0,
+                '__v': 0
+            }).skip(start).limit(rows).exec((e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -33,15 +43,20 @@ meetings.statics = {
         });
     },
     //查询所有家属会见列表的记录数
-    findTotal() {
+    findTotal(request = {}) {
         let self = this;
+        let query = request.query;
+        let condition = {};
+        query.name ? condition.name = query.name : '';
+        query.prisonerNumber ? condition.prisonerNumber = query.prisonerNumber : '';
+        query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.find((e, doc) => {
+            self.find({}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc.length);
-            });
+            }).populate('registrations');
         });
     },
     //新增家属会见信息
@@ -60,8 +75,6 @@ meetings.statics = {
     updateMeetings(request = {}) {
         let self = this;
         let body = request.body;
-        let condition = body.id ? {id: body.id} : {id: ''};
-        delete body.id;
         return new Promise((resolve, reject) => {
             self.update(condition, {updated_at: Date.now(), ...body}, (e, doc) => {
                 if (e) {

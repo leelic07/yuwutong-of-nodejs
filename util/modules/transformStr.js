@@ -14,6 +14,7 @@ module.exports = {
             let doc = item._doc;
             let docTemp = {};
             for (let key in doc) {
+                // doc[key] = typeof doc[key] === 'object' ? this.transformObj(doc[key]) : doc[key];
                 docTemp[this.transformStr(key)] = doc[key];
             }
             newArr.push(docTemp);

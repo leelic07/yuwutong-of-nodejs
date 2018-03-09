@@ -24,42 +24,36 @@ let jails = new Schema({
     image_url: {type: String, default: '/upload/images/default.png'}//文件路径地址
 });
 
-class Jails {
-    constructor(mongoose) {
-        this.jail = mongoose.model('jails', jails);
-    }
-
+jails.statics = {
     //查询监狱信息
-    find(condition = {}, field = {}) {
+    findJails(condition = {}, field = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.jail.findOne(condition, field, (e, doc) => {
+            self.findOne(condition, field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc);
             });
         });
-    }
-
+    },
     //添加监狱信息
-    create(...field) {
+    createJails(...field) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.jail.insertMany(field, (e, doc) => {
+            self.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc)
             });
         })
-    }
-
+    },
     //修改监狱信息
-    update(condition = {}, field = {}) {
+    updateJails(condition = {}, field = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.jail.update(condition, field, (e, doc) => {
+            self.update(condition, field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -67,6 +61,6 @@ class Jails {
             });
         })
     }
-}
+};
 
-module.exports = new Jails(mongoose);
+module.exports = mongoose.model('jails', jails);

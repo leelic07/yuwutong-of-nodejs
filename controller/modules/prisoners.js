@@ -76,7 +76,7 @@ class Prisoners {
             }
         }).catch(err => ctx.throw(err.status || 500, err.message));
         //查询家属信息列表
-        await db.getFamilies().find().then(families => {
+        await db.getFamilies().findFamilies().then(families => {
             if (families.length) {
                 familiesList = families;
             } else ctx.body = {

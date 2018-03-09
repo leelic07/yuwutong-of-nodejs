@@ -92,9 +92,9 @@ class Token {
         // }).catch(err => ctx.throw(err.status | 500, err.message));
 
         let req = ctx.request.body;
-        await db.getJails().find({prison: req.prison}).then(async jail => {
+        await db.getJails().findJails({prison: req.prison}).then(async jail => {
             if (jail) {
-                await db.getUsers().find({
+                await db.getUsers().findUsers({
                     salt: req.username,
                     hashed_password: req.password,
                     jail_id: Number(jail.id)

@@ -13,30 +13,25 @@ let account_details = new mongoose.Schema({
     updated_at: {type: Date, default: Date.now}//更新时间
 });
 
-class AccountDetails {
-    constructor(mongoose) {
-        this.accountDetails = mongoose.model('account_details', account_details);
-    }
-
+account_details.statics = {
     //根据id查询罪犯账户明细
     findByAccountId(id = '') {
         let self = this;
         let account_id = id;
         return new Promise((resolve, reject) => {
-            self.accountDetails.find({account_id: account_id}, (e, doc) => {
+            self.find({account_id: account_id}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(util.transformArr(doc));
             });
         })
-    }
-
+    },
     //新增罪犯账户明细
-    create(...field) {
+    createAccountDetails(...field) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.accountDetails.insertMany(field, (e, doc) => {
+            self.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -44,6 +39,6 @@ class AccountDetails {
             });
         })
     }
-}
+};
 
-module.exports = new AccountDetails(mongoose);
+module.exports = mongoose.model('account_details', account_details);

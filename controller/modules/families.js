@@ -73,7 +73,7 @@ class Families {
             }
         }).catch(err => ctx.throw(err.status || 500, err.message));
         //查找罪犯列表
-        await db.getPrisoners().find(ctx.request).then(prisoners => {
+        await db.getPrisoners().findPrisoners(ctx.request).then(prisoners => {
             if (prisoners.length) prisonersList = prisoners;
             else ctx.body = {
                 code: 404,

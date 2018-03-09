@@ -23,18 +23,15 @@ let prisoners = new Schema({
     sys_flag: {type: Number, default: 1}//是否删除（1：未删除；0：已删除）
 });
 
-class Prisoners {
-    constructor(mongoose) {
-        this.prisoner = mongoose.model('prisoners', prisoners);
-    }
-
+prisoners.statics = {
+    //根据罪犯编号查询罪犯信息
     findByPrisonerNumber(request = {}) {
         let self = this;
         let query = request.query;
         let condition = {jail_id: request.user.jail_id};
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, {
+            self.find(condition, {
                 '_id': 0,
                 '__v': 0
             }).exec((e, doc) => {
@@ -46,14 +43,13 @@ class Prisoners {
                 }
             });
         });
-    }
-
+    },
     //查询罪犯信息
-    find(request = {}) {
+    findPrisoners(request = {}) {
         let self = this;
         let condition = {jail_id: request.user.jail_id};
         return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
+            self.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
                     if (e) {
                         console.log(e);
                         reject(e);
@@ -61,23 +57,7 @@ class Prisoners {
                 }
             )
         })
-    }
-
-    //查询罪犯信息
-    findOrigin(request = {}) {
-        let self = this;
-        let condition = {jail_id: request.user.jail_id};
-        return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
-                    if (e) {
-                        console.log(e);
-                        reject(e);
-                    } else resolve(doc);
-                }
-            )
-        })
-    }
-
+    },
     //分页查询服刑人员信息列表
     findPage(request = {}) {
         let self = this;
@@ -88,7 +68,7 @@ class Prisoners {
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, {
+            self.find(condition, {
                 '_id': 0,
                 '__v': 0
             }).skip(start).limit(rows).exec((e, doc) => {
@@ -100,32 +80,7 @@ class Prisoners {
                 }
             });
         });
-    }
-
-    //分页查询服刑人员信息列表
-    findPageOrigin(request = {}) {
-        let self = this;
-        let query = request.query;
-        let page = Number(query.page), rows = Number(query.rows);
-        let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
-        let condition = {jail_id: request.user.jail_id};
-        query.name ? condition.name = query.name : '';
-        query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
-        return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, {
-                '_id': 0,
-                '__v': 0
-            }).skip(start).limit(rows).exec((e, doc) => {
-                if (e) {
-                    console.log(e);
-                    reject(e);
-                } else {
-                    resolve(doc);
-                }
-            });
-        });
-    }
-
+    },
     //查询服刑人员信息列表的记录数
     findTotal(request = {}) {
         let self = this;
@@ -134,33 +89,31 @@ class Prisoners {
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
-            self.prisoner.find(condition, (e, doc) => {
+            self.find(condition, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc.length);
             })
         })
-    }
-
+    },
     //新增服刑人员信息
-    create(...field) {
+    createPrisoners(...field) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.prisoner.insertMany(field, (e, doc) => {
+            self.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc);
             });
         })
-    }
-
+    },
     //修改服刑人员信息
-    update(condition = {}, field = {}) {
+    updatePrisoners(condition = {}, field = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.prisoner.update(condition, {updated_at: Date.now, ...field}, (e, doc) => {
+            self.update(condition, {updated_at: Date.now, ...field}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -168,6 +121,6 @@ class Prisoners {
             })
         })
     }
-}
+};
 
-module.exports = new Prisoners(mongoose);
+module.exports = mongoose.model('prisoners', prisoners);

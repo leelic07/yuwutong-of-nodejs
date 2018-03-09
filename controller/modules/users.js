@@ -10,7 +10,7 @@ class Users {
     //获取登录的用户信息
     async users(ctx, next) {
         let user = ctx.request.user;
-        await db.getUsers().find({id: user.user_id}, {role: 1, id: 1, '_id': 0, '__v': 0}).then(user => {
+        await db.getUsers().findUsers({id: user.user_id}, {role: 1, id: 1, '_id': 0, '__v': 0}).then(user => {
             if (user.length) {
                 ctx.body = {
                     code: 200,

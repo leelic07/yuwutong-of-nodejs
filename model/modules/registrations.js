@@ -20,11 +20,40 @@ let registrations = new Schema({
     gender: {type: String, default: ''}//性别
 });
 
-class Registrations {
-    constructor(mongoose) {
-        this.registrations = mongoose.model('registrations', registrations);
-    }
-
+registrations.statics = {
+    //根据家属姓名，囚犯号，身份证查询家属注册列表
+    findByNameOrNumberOrUuid(request = {}){
+        let self = this;
+        let query = request.query;
+        let condition = {jail_id: request.user.jail_id};
+        query.name ? condition.name = query.name : '';
+        query.prisonerNumber ? condition.prisonerNumber = query.prisonerNumber : '';
+        query.uuid ? condition.uuid = query.uuid : '';
+        return new Promise((resolve, reject) => {
+            self.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
+                    if (e) {
+                        console.log(e);
+                        reject(e);
+                    } else resolve(util.transformArr(doc));
+                }
+            )
+            ;
+        });
+    },
+    //查找家属注册列表
+    findRegistrations(request = {}){
+        let self = this;
+        let condition = {jail_id: request.user.jail_id};
+        return new Promise((resolve, reject) => {
+            self.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
+                    if (e) {
+                        console.log(e);
+                        reject(e);
+                    } else resove(util.transformArr(doc));
+                }
+            )
+        });
+    },
     //分页查询家属注册列表
     findPage(request = {}) {
         let self = this;
@@ -36,15 +65,14 @@ class Registrations {
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.registrations.find(condition, {'_id': 0, '__v': 0}).skip(start).limit(rows).exec((e, doc) => {
+            self.find(condition, {'_id': 0, '__v': 0}).skip(start).limit(rows).exec((e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(util.transformArr(doc));
             });
         });
-    }
-
+    },
     //查询所有家属注册列表的记录数
     findTotal(request = {}) {
         let self = this;
@@ -54,20 +82,20 @@ class Registrations {
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.registrations.find(condition, (e, doc) => {
+            self.find(condition, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc.length);
             });
         });
-    }
-
+    },
     //增加家属注册信息
-    create(...field) {
+    createRegistrations(...field)
+    {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.registrations.insertMany(field, (e, doc) => {
+            self.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -75,15 +103,16 @@ class Registrations {
             });
         });
     }
-
-    //修改家属注册信息
-    update(request = {}) {
+    ,
+//修改家属注册信息
+    updateRegistrations(request = {})
+    {
         let self = this;
         let body = request.body;
         let condition = body.id ? {id: body.id} : {id: ''};
         delete body.id;
         return new Promise((resolve, reject) => {
-            self.registrations.update(condition, {updated_at: Date.now(), ...body}, (e, doc) => {
+            self.update(condition, {updated_at: Date.now(), ...body}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -92,5 +121,6 @@ class Registrations {
         });
     }
 }
+;
 
-module.exports = new Registrations(mongoose);
+module.exports = mongoose.model('registrations', registrations);

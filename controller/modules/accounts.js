@@ -41,7 +41,7 @@ class Accounts {
         let accountsList = [];//罪犯账户列表
         let prisonersList = [];//罪犯信息列表
         //获取罪犯账户信息
-        await db.getAccounts().find().then(accounts => {
+        await db.getAccounts().findAccounts().then(accounts => {
             if (accounts.length) {
                 accountsList = accounts;
             } else ctx.body = {

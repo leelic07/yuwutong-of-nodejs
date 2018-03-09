@@ -20,11 +20,8 @@ let families = new Schema({
     last_trade_no: {type: String, default: ''}//截止交易号
 });
 
-class Families {
-    constructor(mongoose) {
-        this.families = mongoose.model('families', families);
-    }
-
+families.statics = {
+    //根据家属姓名或者身份证查询家属信息
     findByNameOrUuid(request = {}) {
         let self = this;
         let query = request.query;
@@ -32,10 +29,7 @@ class Families {
         query.name ? condition.name = query.name : '';
         query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.families.find(condition, {
-                '_id': 0,
-                '__v': 0
-            }).exec((e, doc) => {
+            self.find(condition, {'_id': 0, '__v': 0}).exec((e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -44,21 +38,19 @@ class Families {
                 }
             });
         });
-    }
-
+    },
     //查询家属信息
-    find() {
+    findFamilies() {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.families.find({}, {'_id': 0, '__v': 0}, (e, doc) => {
+            self.find({}, {'_id': 0, '__v': 0}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(util.transformArr(doc));
             });
         })
-    }
-
+    },
     //分页查询家属信息列表
     findPage(request = {}) {
         let self = this;
@@ -69,7 +61,7 @@ class Families {
         query.name ? condition.name = query.name : '';
         query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.families.find(condition, {
+            self.find(condition, {
                 '_id': 0,
                 '__v': 0
             }).skip(start).limit(rows).exec((e, doc) => {
@@ -81,8 +73,7 @@ class Families {
                 }
             });
         });
-    }
-
+    },
     //查询服刑人员信息列表的记录数
     findTotal(request = {}) {
         let self = this;
@@ -91,20 +82,19 @@ class Families {
         query.name ? condition.name = query.name : '';
         query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.families.find(condition, (e, doc) => {
+            self.find(condition, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc.length);
             })
         })
-    }
-
+    },
     //新增家属信息
-    create(...field) {
+    createFamilies(...field) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.families.insertMany(field, (e, doc) => {
+            self.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -112,6 +102,6 @@ class Families {
             });
         })
     }
-}
+};
 
-module.exports = new Families(mongoose);
+module.exports = mongoose.model('families', families);

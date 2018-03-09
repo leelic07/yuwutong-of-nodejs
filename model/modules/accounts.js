@@ -12,16 +12,12 @@ let accounts = mongoose.Schema({
     updated_at: {type: Date, default: Date.now}//更新时间
 });
 
-class Accounts {
-    constructor(mongoose) {
-        this.accounts = mongoose.model('accounts', accounts);
-    }
-
+accounts.statics = {
     //查询罪犯账户信息
-    find(request = {}) {
+    findAccounts(request = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.accounts.find(request, {'_id': 0, '__v': 0}, (e, doc) => {
+            self.find(request, {'_id': 0, '__v': 0}, (e, doc) => {
                     if (e) {
                         console.log(e);
                         reject(e);
@@ -29,8 +25,7 @@ class Accounts {
                 }
             )
         })
-    }
-
+    },
     //分页查询罪犯账户列表
     findPage(request = {}) {
         let self = this;
@@ -41,7 +36,7 @@ class Accounts {
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
-            self.accounts.find(condition, {
+            self.find(condition, {
                 '_id': 0,
                 '__v': 0
             }).skip(start).limit(rows).exec((e, doc) => {
@@ -51,8 +46,7 @@ class Accounts {
                 } else resolve(doc);
             });
         });
-    }
-
+    },
     //查询罪犯账户列表的记录数
     findTotal(request = {}) {
         let self = this;
@@ -61,20 +55,19 @@ class Accounts {
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
-            self.accounts.find(condition, (e, doc) => {
+            self.find(condition, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
                 } else resolve(doc.length);
             });
         });
-    }
-
+    },
     //新增罪犯账户信息
-    create(...field) {
+    createAccounts(...field) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.accounts.insertMany(field, (e, doc) => {
+            self.insertMany(field, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -82,6 +75,6 @@ class Accounts {
             });
         })
     }
-}
+};
 
-module.exports = new Accounts(mongoose);
+module.exports = mongoose.model('accounts', accounts);
