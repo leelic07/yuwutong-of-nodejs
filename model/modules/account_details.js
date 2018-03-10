@@ -15,9 +15,11 @@ let account_details = new mongoose.Schema({
 
 account_details.statics = {
     //根据id查询罪犯账户明细
-    findByAccountId(id = '') {
+    findByAccountId(request = {}) {
         let self = this;
-        let account_id = id;
+        let query = request.query;
+        let account_id = '';
+        query.id ? account_id = query.id : '';
         return new Promise((resolve, reject) => {
             self.find({account_id: account_id}, (e, doc) => {
                 if (e) {

@@ -85,13 +85,17 @@ class Families {
         familiesList.forEach(family => {
             family.prisoners = prisonersList.find(prisoner => family.prisonerId === prisoner.id);
         });
-        ctx.body = {
+        if (familiesList.length) ctx.body = {
             code: 200,
             msg: '查询家属信息成功',
             data: {
                 families: familiesList,
                 familiesSize: size ? size : 0
             }
+        }; else ctx.body = {
+            code: 404,
+            msg: '未找到服刑人员信息',
+            data: {}
         }
     }
 }

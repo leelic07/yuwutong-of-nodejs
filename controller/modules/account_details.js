@@ -50,8 +50,8 @@ class AccountDetails {
         //     }
         // }).catch(err => ctx.throw(500, err.message));
 
-        await db.getAccountDetail().findByAccountId(ctx.request.query.id).then(accountDetail => {
-            if (accountDetail) {
+        await db.getAccountDetail().findByAccountId(ctx.request).then(accountDetail => {
+            if (accountDetail.length) {
                 ctx.body = {
                     code: 200,
                     msg: '查询罪犯账户明细成功',

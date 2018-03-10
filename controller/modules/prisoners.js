@@ -21,7 +21,6 @@ class Prisoners {
         //     prison_term_started_at: 1399935986349,
         //     prison_term_ended_at: 1499935986349,
         //     prison_area: '一监区',
-        //     families: []
         // }, {
         //     id: 2,
         //     prisoner_number: '410001',
@@ -34,7 +33,6 @@ class Prisoners {
         //     prison_term_started_at: 1399935986349,
         //     prison_term_ended_at: 1499935986349,
         //     prison_area: '二监区',
-        //     families: []
         // }, {
         //     id: 3,
         //     prisoner_number: '410002',
@@ -47,7 +45,6 @@ class Prisoners {
         //     prison_term_started_at: 1399935986349,
         //     prison_term_ended_at: 1499935986349,
         //     prison_area: '二监区',
-        //     families: []
         // }).then(result => {
         //     if (result) {
         //         ctx.body = {
@@ -89,13 +86,17 @@ class Prisoners {
         prisonersList.forEach(prisoner => {
             prisoner.families = familiesList.filter(family => family.prisonerId === prisoner.id);
         });
-        ctx.body = {
+        if (prisonersList.length) ctx.body = {
             code: 200,
             msg: '查询服刑人员信息成功',
             data: {
                 prisoners: prisonersList,
                 prisonersSize: size ? size : 0
             }
+        }; else ctx.body = {
+            code: 404,
+            msg: '未找到服刑人员信息',
+            data: {}
         }
     }
 }

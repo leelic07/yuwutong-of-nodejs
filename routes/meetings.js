@@ -11,4 +11,6 @@ router.get('/page', meetingsController.meetings);
 
 router.post('/authorize', meetingsController.authorize);
 
+router.post('/withdraw', meetingsController.authorize);
+
 module.exports = router;

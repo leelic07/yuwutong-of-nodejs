@@ -21,8 +21,20 @@ let families = new Schema({
 });
 
 families.statics = {
+    //根据id数组来查询家属信息
+    findByIds(ids = []){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.find({id: {$in: ids}}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(util.transformArr(doc));
+            });
+        });
+    },
     //根据家属姓名或者身份证查询家属信息
-    findByNameOrUuid(request = {}) {
+    findByNameOrUuid(request = {}){
         let self = this;
         let query = request.query;
         let condition = {};
@@ -40,7 +52,7 @@ families.statics = {
         });
     },
     //查询家属信息
-    findFamilies() {
+    findFamilies(){
         let self = this;
         return new Promise((resolve, reject) => {
             self.find({}, {'_id': 0, '__v': 0}, (e, doc) => {
@@ -49,17 +61,16 @@ families.statics = {
                     reject(e);
                 } else resolve(util.transformArr(doc));
             });
-        })
+        });
     },
     //分页查询家属信息列表
-    findPage(request = {}) {
+    findPage(request = {}){
         let self = this;
         let query = request.query;
         let page = Number(query.page), rows = Number(query.rows);
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
         let condition = {};
-        query.name ? condition.name = query.name : '';
-        query.uuid ? condition.uuid = query.uuid : '';
+        (query.name || query.uuid) && (condition.$or = [{name: query.name}, {uuid: query.uuid}]);
         return new Promise((resolve, reject) => {
             self.find(condition, {
                 '_id': 0,
@@ -75,12 +86,11 @@ families.statics = {
         });
     },
     //查询服刑人员信息列表的记录数
-    findTotal(request = {}) {
+    findTotal(request = {}){
         let self = this;
         let query = request.query;
         let condition = {};
-        query.name ? condition.name = query.name : '';
-        query.uuid ? condition.uuid = query.uuid : '';
+        (query.name || query.uuid) && (condition.$or = [{name: query.name}, {uuid: query.uuid}]);
         return new Promise((resolve, reject) => {
             self.find(condition, (e, doc) => {
                 if (e) {
@@ -91,7 +101,8 @@ families.statics = {
         })
     },
     //新增家属信息
-    createFamilies(...field) {
+    createFamilies(...field)
+    {
         let self = this;
         return new Promise((resolve, reject) => {
             self.insertMany(field, (e, doc) => {

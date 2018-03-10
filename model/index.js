@@ -11,6 +11,7 @@ const families = require('./modules/families');
 const accounts = require('./modules/accounts');
 const account_details = require('./modules/account_details');
 const meetings = require('./modules/meetings');
+const mail_boxes = require('./modules/mail_boxes');
 //数据库对象
 class DataBase {
     constructor(params) {
@@ -70,6 +71,11 @@ class DataBase {
     getMeetings() {
         return this.meetings;
     }
+
+    //获取监狱长邮箱的模型
+    getMailBoxes() {
+        return this.mail_boxes;
+    }
 }
 
 let database = new DataBase({
@@ -80,7 +86,8 @@ let database = new DataBase({
     families,
     accounts,
     account_details,
-    meetings
+    meetings,
+    mail_boxes
 });
 
 //连接数据库

@@ -27,7 +27,7 @@ registrations.statics = {
         let query = request.query;
         let condition = {jail_id: request.user.jail_id};
         query.name ? condition.name = query.name : '';
-        query.prisonerNumber ? condition.prisonerNumber = query.prisonerNumber : '';
+        query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
             self.find(condition, {'_id': 0, '__v': 0}, (e, doc) => {
@@ -55,7 +55,7 @@ registrations.statics = {
         });
     },
     //分页查询家属注册列表
-    findPage(request = {}) {
+    findPage(request = {}){
         let self = this;
         let query = request.query;
         let page = Number(query.page), rows = Number(query.rows);
@@ -74,7 +74,7 @@ registrations.statics = {
         });
     },
     //查询所有家属注册列表的记录数
-    findTotal(request = {}) {
+    findTotal(request = {}){
         let self = this;
         let query = request.query;
         let condition = {jail_id: request.user.jail_id};
@@ -91,8 +91,7 @@ registrations.statics = {
         });
     },
     //增加家属注册信息
-    createRegistrations(...field)
-    {
+    createRegistrations(...field){
         let self = this;
         return new Promise((resolve, reject) => {
             self.insertMany(field, (e, doc) => {
@@ -104,7 +103,7 @@ registrations.statics = {
         });
     }
     ,
-//修改家属注册信息
+    //修改家属注册信息
     updateRegistrations(request = {})
     {
         let self = this;

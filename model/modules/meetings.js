@@ -28,7 +28,7 @@ meetings.statics = {
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
         let condition = {};
         query.name ? condition.name = query.name : '';
-        query.prisonerNumber ? condition.prisonerNumber = query.prisonerNumber : '';
+        query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
             self.find(condition, {
@@ -48,10 +48,10 @@ meetings.statics = {
         let query = request.query;
         let condition = {};
         query.name ? condition.name = query.name : '';
-        query.prisonerNumber ? condition.prisonerNumber = query.prisonerNumber : '';
+        query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         query.uuid ? condition.uuid = query.uuid : '';
         return new Promise((resolve, reject) => {
-            self.find({}, (e, doc) => {
+            self.find(condition, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -72,11 +72,13 @@ meetings.statics = {
         });
     },
     //修改家属注册信息
-    updateMeetings(request = {}) {
+    updateById(request = {}) {
         let self = this;
         let body = request.body;
+        let id = body.id;
+        delete body.id;
         return new Promise((resolve, reject) => {
-            self.update(condition, {updated_at: Date.now(), ...body}, (e, doc) => {
+            self.update({id: id}, {updated_at: Date.now(), ...body}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
