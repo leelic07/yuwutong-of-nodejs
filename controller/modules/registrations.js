@@ -124,7 +124,7 @@ class Registrations {
 
     //授权家属注册信息
     async authorize(ctx, next) {
-        await db.getRegistrations().update(ctx.request).then(result => {
+        await db.getRegistrations().updateRegistrations(ctx.request).then(result => {
             if (result) ctx.body = {
                 code: 200,
                 msg: '家属注册信息授权成功',

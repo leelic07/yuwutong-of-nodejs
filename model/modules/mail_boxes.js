@@ -21,7 +21,7 @@ mail_boxes.statics = {
     findById(request = {}){
         let self = this;
         let query = request.query;
-        let condition = {};
+        let condition = {jail_id: request.user.jail_id};
         query.id ? condition.id = query.id : '';
         return new Promise((resolve, reject) => {
             self.findOne(condition, {'_id': 0, '__v': 0}, (e, doc) => {
@@ -39,7 +39,7 @@ mail_boxes.statics = {
         let page = Number(query.page), rows = Number(query.rows);
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
         return new Promise((resolve, reject) => {
-            self.find({}, {
+            self.find({jail_id: request.user.jail_id}, {
                 '_id': 0,
                 '__v': 0
             }).skip(start).limit(rows).exec((e, doc) => {
@@ -54,7 +54,7 @@ mail_boxes.statics = {
     findTotal(request = {}){
         let self = this;
         return new Promise((resolve, reject) => {
-            self.count({}, (e, doc) => {
+            self.count({jail_id: request.user.jail_id}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);

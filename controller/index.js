@@ -10,6 +10,10 @@ const accounts = require('./modules/accounts');
 const accountDetails = require('./modules/account_details');
 const meetings = require('./modules/meetings');
 const mail_boxes = require('./modules/mail_boxes');
+const terminals = require('./modules/terminals');
+const versions = require('./modules/versions');
+const upload = require('./modules/upload');
+
 class Controller {
     constructor(params) {
         for (let key in params) {
@@ -61,6 +65,21 @@ class Controller {
     getMailBoxesController() {
         return this.mail_boxes;
     }
+
+    //获取设备终端的控制器
+    getTerminalsController() {
+        return this.terminals;
+    }
+
+    //获取app终端信息的控制器
+    getVersionsController() {
+        return this.versions;
+    }
+
+    //获取上传文件的控制器
+    getUploadController() {
+        return this.upload;
+    }
 }
 
 let controller = new Controller({
@@ -72,7 +91,10 @@ let controller = new Controller({
     accounts,
     accountDetails,
     meetings,
-    mail_boxes
+    mail_boxes,
+    terminals,
+    versions,
+    upload
 });
 
 module.exports = controller;

@@ -12,6 +12,9 @@ const accounts = require('./modules/accounts');
 const account_details = require('./modules/account_details');
 const meetings = require('./modules/meetings');
 const mail_boxes = require('./modules/mail_boxes');
+const comments = require('./modules/comments');
+const terminals = require('./modules/terminals');
+const versions = require('./modules/versions');
 //数据库对象
 class DataBase {
     constructor(params) {
@@ -76,6 +79,21 @@ class DataBase {
     getMailBoxes() {
         return this.mail_boxes;
     }
+
+    //获取监狱长邮箱回复的模型
+    getComments() {
+        return this.comments;
+    }
+
+    //获取设备终端的模型
+    getTerminals() {
+        return this.terminals;
+    }
+
+    //获取app版本信息的模型
+    getVersions() {
+        return this.versions;
+    }
 }
 
 let database = new DataBase({
@@ -87,7 +105,10 @@ let database = new DataBase({
     accounts,
     account_details,
     meetings,
-    mail_boxes
+    mail_boxes,
+    comments,
+    terminals,
+    versions
 });
 
 //连接数据库

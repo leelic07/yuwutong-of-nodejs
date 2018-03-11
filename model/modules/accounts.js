@@ -55,11 +55,11 @@ accounts.statics = {
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
-            self.find(condition, (e, doc) => {
+            self.count(condition, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
-                } else resolve(doc.length);
+                } else resolve(doc);
             });
         });
     },

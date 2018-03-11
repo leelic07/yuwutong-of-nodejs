@@ -16,6 +16,9 @@ const families = require('./routes/families');
 const accounts = require('./routes/accounts');
 const meetings = require('./routes/meetings');
 const mailboxes = require('./routes/mail_boxes');
+const terminals = require('./routes/terminals');
+const versions = require('./routes/versions');
+const upload = require('./routes/upload');
 //引用数据库模型
 require('./model/index');
 // error handler
@@ -54,6 +57,9 @@ app.use(families.routes(), families.allowedMethods());
 app.use(accounts.routes(), accounts.allowedMethods());
 app.use(meetings.routes(), meetings.allowedMethods());
 app.use(mailboxes.routes(), mailboxes.allowedMethods());
+app.use(terminals.routes(), terminals.allowedMethods());
+app.use(versions.routes(), versions.allowedMethods());
+app.use(upload.routes(), upload.allowedMethods());
 // error-handling
 app.on('error', (err, ctx) => {
     console.error('server error', err, ctx);

@@ -21,6 +21,18 @@ let families = new Schema({
 });
 
 families.statics = {
+    //根据id查询家属信息
+    findById(id = ''){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.findOne({id: id}, {'_id': 0, '__v': 0}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(util.transformObj(doc));
+            });
+        });
+    },
     //根据id数组来查询家属信息
     findByIds(ids = []){
         let self = this;

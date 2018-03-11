@@ -9,4 +9,8 @@ router.prefix('/mailboxes');
 
 router.get('/page', mailBoxesController.mailboxes);
 
+router.get('/jailReply', mailBoxesController.jailReply);
+
+router.post('/reply', mailBoxesController.reply);
+
 module.exports = router;

@@ -24,6 +24,18 @@ let prisoners = new Schema({
 });
 
 prisoners.statics = {
+    //根据id查询罪犯信息
+    findById(id = ''){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.findOne({id: id}, {'_id': 0, '__v': 0}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(util.transformObj(doc));
+            });
+        });
+    },
     //根据罪犯编号查询罪犯信息
     findByPrisonerNumber(request = {}) {
         let self = this;
