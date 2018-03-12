@@ -80,28 +80,28 @@ class Meetings {
         //         data: {}
         //     }
         // }).catch(err => ctx.throw(500, err.message));
-        //
-        // // await db.getMeetings().update({id: 3}, {
-        // //     registrations: {
-        // //         id: 7,
-        // //         jail_id: 1,//监狱id
-        // //         name: '罗俊',//家属名称
-        // //         phone: '13672095374',//联系电话
-        // //         uuid: '430122198987689412',
-        // //         prisoner_number: '410001',//犯人编号
-        // //         relationship: '兄弟',//关系
-        // //         status: 'PENDING',//状态(默认值,PENDING),PENDING:授权中;DENIED:驳回;PASSED:已通过
-        // //         remarks: '',//备注
-        // //         gender: '男'//性别
-        // //     }
-        // // }, (e, d) => {
-        // //     !e && (ctx.body = {
-        // //         code: 200,
-        // //         data: {
-        // //             result: d
-        // //         }
-        // //     });
-        // // });
+
+        // await db.getMeetings().update({id: 3}, {
+        //     registrations: {
+        //         id: 7,
+        //         jail_id: 1,//监狱id
+        //         name: '罗俊',//家属名称
+        //         phone: '13672095374',//联系电话
+        //         uuid: '430122198987689412',
+        //         prisoner_number: '410001',//犯人编号
+        //         relationship: '兄弟',//关系
+        //         status: 'PENDING',//状态(默认值,PENDING),PENDING:授权中;DENIED:驳回;PASSED:已通过
+        //         remarks: '',//备注
+        //         gender: '男'//性别
+        //     }
+        // }, (e, d) => {
+        //     !e && (ctx.body = {
+        //         code: 200,
+        //         data: {
+        //             result: d
+        //         }
+        //     });
+        // });
 
         let size;//家属会见列表的总记录数
         let meetingsList = [];//家属会见信息

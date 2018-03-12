@@ -2,6 +2,7 @@
  * Created by Administrator on 2018/3/6/006.
  */
 const db = require('../../model');
+const util = require('../../util');
 
 class Prisoners {
     constructor() {
@@ -97,6 +98,81 @@ class Prisoners {
             code: 404,
             msg: '未找到服刑人员信息',
             data: {}
+        }
+    }
+
+    //处理上传的罪犯模板
+    async processing(ctx, next) {
+        let data = util.excelparser(ctx.request.query.filepath);
+        console.log(data);
+        let dataTemp = [];
+        let prisoner_numbers = [];//模板中所有的罪犯编号数组
+        for (let i = 1; i < data.length; i++) {
+            let param = data[i];
+            prisoner_numbers.push(param[0]);
+            dataTemp.push({
+                prisoner_number: param[0].toString(),
+                name: param[1],
+                gender: param[2],
+                crimes: param[3],
+                additional_punishment: param[4],
+                prison_term_started_at: param[5],
+                prison_term_ended_at: param[6],
+                prison_area: param[7],
+                original_sentence: param[8]
+            });
+        }
+        // let updateResult;//解析文件的结果
+        // dataTemp.forEach(async data => {
+        //     await db.getPrisoners().findByPrisonerNumberAndUpdate(data).then(result => {
+        //         if (result) updateResult = result;
+        //         else ctx.body = {
+        //             code: 500,
+        //             msg: '解析文件失败',
+        //             data: {}
+        //         }
+        //     }).catch(err => ctx.throw(500, err.message));
+        // });
+        // updateResult && (ctx.body = {
+        //     code: 200,
+        //     msg: '解析文件成功',
+        //     data: updateResult
+        // });
+        // await db.getPrisoners().findByPrisonerNumbers(prisoner_numbers).then(prisoners => {
+        //     if (prisoners.length) {
+        //         if (prisoners.length === dataTemp.length) {
+        //             prisoners.forEach(async prisoner => {
+        //                 let data = dataTemp.find(data => prisoner.prisonerNumber === data.prisoner_nubmer);
+        //                 data && await db.getPrisoners().findByPrisonerNumberAndUpdate(data).then(result => {
+        //                     !result && (ctx.body = {
+        //                         code: 500,
+        //                         msg: '解析文件失败',
+        //                         data: {}
+        //                     });
+        //                 }).catch(err => ctx.throw(500, err.message));
+        //             });
+        //         } else if (prisoners.length !== dataTemp.length) {
+        //             let dataNotExist = [];
+        //             let prisonerTemp = {};
+        //             dataTemp.forEach(data => {
+        //                 prisonerTemp = prisoners.find(prisoner => prisoner.prisonerNumber === data.prisoner);
+        //             })
+        //         }
+        //     }
+        // }).catch(err => ctx.throw(500, err.message));
+
+        if (data) {
+            ctx.body = {
+                code: 200,
+                msg: '解析文件成功',
+                data: dataTemp
+            }
+        } else {
+            ctx.body = {
+                code: 500,
+                msg: '解析文件失败',
+                data: {}
+            }
         }
     }
 }

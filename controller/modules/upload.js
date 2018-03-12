@@ -7,13 +7,14 @@ class Upload {
 
     //上传文件
     async upload(ctx, next) {
-        if (ctx.req.file) ctx.body = {
-            code: 200,
-            msg: '上传文件成功',
-            data: {
-                filepath: ctx.req.file.path
-            }
-        }; else ctx.body = {
+        if (ctx.req.file) {
+            // ctx.request.file.path =
+            ctx.body = {
+                code: 200,
+                msg: '上传文件成功',
+                path: ctx.req.file.path
+            };
+        } else ctx.body = {
             code: 500,
             msg: '上传文件失败',
             data: {

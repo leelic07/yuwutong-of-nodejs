@@ -46,7 +46,7 @@ class Terminals {
         await db.getTerminals().findPage(ctx.request).then(async terminals => {
             if (terminals.length) {
                 await db.getTerminals().countTotal(ctx.request).then(total => size = total).catch();
-                ctx.body = {
+                    ctx.body = {
                     code: 200,
                     msg: '查询设备终端信息成功',
                     data: {

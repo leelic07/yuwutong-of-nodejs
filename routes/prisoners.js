@@ -9,4 +9,6 @@ router.prefix('/prisoners');
 
 router.get('/page', prisonersController.prisoners);
 
+router.get('/processing', prisonersController.processing);
+
 module.exports = router;

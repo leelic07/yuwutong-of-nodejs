@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const util = require('../../util');
 
 let prisoners = new Schema({
-    id: {type: Number, required: true, unique: true},//罪犯id
+    id: {type: Number, unique: true},//罪犯id
     prisoner_number: String,//罪犯编号
     // families: [{type: Number, ref: 'families'}],//罪犯对应的家属信息
     name: {type: String, default: ''},//罪犯名称
@@ -24,6 +24,31 @@ let prisoners = new Schema({
 });
 
 prisoners.statics = {
+    findByPrisonerNumberAndUpdate(prisoner = {}){
+        let self = this;
+        let prisoner_number = prisoner.prisoner_number;
+        delete prisoner.prisoner_number;
+        return new Promise((resolve, reject) => {
+            self.update({prisoner_number: prisoner_number}, prisoner, {upsert: true}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            });
+        });
+    },
+    //根据罪犯编号数组查询罪犯信息
+    findByPrisonerNumbers(prisoner_numbers = []){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.find({prisoner_number: {$in: prisoner_numbers}}, {'_id': 0, '__v': 0}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(util.transformArr(doc));
+            });
+        });
+    },
     //根据id查询罪犯信息
     findById(id = ''){
         let self = this;
