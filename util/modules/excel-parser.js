@@ -15,7 +15,7 @@ module.exports = function (filePath) {
         let arr = [];
         let value = excelObj[i];
         for (let j in value) {
-            arr.push(value[j] ? value[j] : '');
+            arr.push(value[j] ? value[j] : 'null');
         }
         data.push(arr);
     }
@@ -28,6 +28,6 @@ module.exports = function (filePath) {
     //将文件内容插入新的文件中
     // fs.writeFileSync(filePath, buffer, {'flag': 'w'});
 
-    return data;
+    return excelObj;
 };
 
