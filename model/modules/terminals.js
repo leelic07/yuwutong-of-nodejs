@@ -46,6 +46,32 @@ terminals.statics = {
             });
         });
     },
+    //添加设备终端信息
+    addTerminals(request = {}){
+        let self = this;
+        let body = request.body;
+        let field = {};
+        field.jail_id = request.user.jail_id;
+        body.terminalNumber ? field.terminal_number = body.terminalNumber : '';
+        body.roomNumber ? field.room_number = body.roomNumber : '';
+        body.hostPassword ? field.host_password = body.hostPassword : '';
+        body.mettingPassword ? field.metting_password = body.mettingPassword : '';
+        let id = 0;
+        return new Promise((resolve, reject) => {
+            self.findOne().sort({id: -1}).exec((e, doc) => {
+                if (e) reject(e);
+                else {
+                    if (doc) field.id = ++doc.id;
+                    else field.id = ++id;
+                    let terminal = new self(field);
+                    terminal.save((e, doc) => {
+                        if (e) reject(e);
+                        else resolve(doc);
+                    });
+                }
+            });
+        });
+    },
     //新增设备终端信息
     createTerminals(...field) {
         let self = this;
@@ -57,6 +83,26 @@ terminals.statics = {
                 } else resolve(doc);
             });
         })
+    },
+    //修改设备终端信息
+    updateTerminals(request = {}){
+        let self = this;
+        let body = request.body;
+        let id = body.id;
+        let field = {};
+        body.terminalNumber ? field.terminal_number = body.terminalNumber : '';
+        body.roomNumber ? field.room_number = body.roomNumber : '';
+        body.hostPassword ? field.host_password = body.hostPassword : '';
+        body.mettingPassword ? field.metting_password = body.mettingPassword : '';
+        field.updated_at = Date.now();
+        return new Promise((resolve, reject) => {
+            self.update({id: id}, field, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            });
+        });
     }
 };
 

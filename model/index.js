@@ -16,6 +16,7 @@ const comments = require('./modules/comments');
 const terminals = require('./modules/terminals');
 const versions = require('./modules/versions');
 const prison_terms = require('./modules/prison_terms');
+const items = require('./modules/items');
 //数据库对象
 class DataBase {
     constructor(params) {
@@ -100,6 +101,11 @@ class DataBase {
     getPrisonTerms() {
         return this.prison_terms;
     }
+
+    //获取商品信息的模型
+    getItems() {
+        return this.items;
+    }
 }
 
 let database = new DataBase({
@@ -115,7 +121,8 @@ let database = new DataBase({
     comments,
     terminals,
     versions,
-    prison_terms
+    prison_terms,
+    items
 });
 
 //连接数据库

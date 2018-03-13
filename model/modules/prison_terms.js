@@ -39,6 +39,42 @@ prison_terms.statics = {
             });
         });
     },
+    //查询刑期变动表
+    // find(condition = {}, field = {}, options = {}){
+    //     let self = this;
+    //     return new Promise((resolve, reject) => {
+    //         self.find(condition, field, options, (e, doc) => {
+    //             if (e) {
+    //                 console.log(e);
+    //                 reject(e);
+    //             } else resolve(doc);
+    //         })
+    //     });
+    // },
+    // //增加刑期变动
+    // create(...field){
+    //     let self = this;
+    //     return new Promise((resolve, reject) => {
+    //         self.create(...field, (e, doc) => {
+    //             if (e) {
+    //                 console.log(e);
+    //                 reject(e);
+    //             } else resolve(doc);
+    //         });
+    //     });
+    // },
+    //修改刑期变动
+    updateTerms(condition = {}, field = {}, options = {}){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.update(condition, field, options, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            });
+        })
+    }
 };
 
 module.exports = mongoose.model('prison_terms', prison_terms);

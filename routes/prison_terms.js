@@ -7,6 +7,6 @@ const prisonTermsController = controller.getPrisonTermsController();
 
 router.prefix('/prison_terms');
 
-prouter.get('/processing', prisonTermsController.processing);
+router.get('/processing', prisonTermsController.processing);
 
 module.exports = router;

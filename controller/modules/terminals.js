@@ -46,7 +46,7 @@ class Terminals {
         await db.getTerminals().findPage(ctx.request).then(async terminals => {
             if (terminals.length) {
                 await db.getTerminals().countTotal(ctx.request).then(total => size = total).catch();
-                    ctx.body = {
+                ctx.body = {
                     code: 200,
                     msg: '查询设备终端信息成功',
                     data: {
@@ -57,6 +57,39 @@ class Terminals {
             } else ctx.body = {
                 code: 404,
                 msg: '未找到设备终端信息',
+                data: {}
+            }
+        }).catch(err => ctx.throw(500, err.message));
+    }
+
+    //编辑设备终端信息
+    async edit(ctx, next) {
+        console.log(ctx.request.body);
+        await db.getTerminals().updateTerminals(ctx.request).then(result => {
+            if (result) ctx.body = {
+                code: 200,
+                msg: '编辑设备终端信息成功',
+                data: result
+            }; else ctx.body = {
+                code: 500,
+                msg: '编辑设备终端信息失败',
+                data: {}
+            }
+        }).catch(err => ctx.throw(500, err.message));
+    }
+
+    //新增设备终端信息
+    async add(ctx, next) {
+        await db.getTerminals().addTerminals(ctx.request).then(terminal => {
+            if (terminal) ctx.body = {
+                code: 200,
+                msg: '添加设备终端信息成功',
+                data: {
+                    terminals: terminal
+                }
+            }; else ctx.body = {
+                code: 500,
+                msg: '添加设备终端信息失败',
                 data: {}
             }
         }).catch(err => ctx.throw(500, err.message));

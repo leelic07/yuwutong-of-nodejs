@@ -136,7 +136,7 @@ class Prisoners {
                 code: 500,
                 msg: '解析文件失败',
                 data: {}
-            }
+            };
         }).catch(err => ctx.throw(500, err.message));
 
         // let prisoner;

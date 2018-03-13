@@ -12,35 +12,76 @@ class PrisonTerms {
     async processing(ctx, next) {
         let data = util.excelparser(ctx.request.query.filepath);
         let dataTemp = [];
+        let req = ctx.request;
         for (let i = 1; i < data.length; i++) {
             let param = data[i];
             dataTemp.push({
                 prisoner_number: param[0].toString(),
-                name: param[1],
-                gender: param[2],
-                crimes: param[3],
-                additional_punishment: param[4],
-                prison_term_started_at: param[5],
-                prison_term_ended_at: param[6],
-                prison_area: param[7],
-                original_sentence: param[8],
-                jail_id: ctx.request.user.jail_id
+                updated_at: param[1],
+                changetype: param[2],
+                sentence: param[3],
+                courtchange: param[4],
+                changeyear: param[5],
+                changemonth: param[6],
+                changeday: param[7],
+                term_finish: param[8],
             });
         }
 
-        await db.getPrisonTerms().parsePrisonTerms(...dataTemp).then(prisoners => {
-            if (prisoners.length) ctx.body = {
+        await dataTemp.forEach(data => {
+            db.getPrisoners().findOne({
+                prisoner_number: data.prisoner_number,
+                jail_id: req.user.jail_id
+            }, (err, prisoner) => {
+                if (err) ctx.throw(500, err.message);
+                else {
+                    if (prisoner) {
+                        data.prisoner_id = prisoner.id;
+                    }
+                }
+            })
+        });
+        let success = 0;//成功的条数
+        let failed = 0;//失败的条数
+        await dataTemp.forEach(data => {
+            if (data['prisoner_id']) {
+                db.getPrisonTerms().update({prisoner_id: data['prisoner_id']}, data, (err, doc) => {
+                    if (err) ctx.throw(500, err.message);
+                    else doc && ++success || ++failed;
+                });
+            } else ++failed;
+            // {
+            //     await db.getPrisonTerms().findOne().sort({id: -1}).exec(async (err, doc) => {
+            //         if (err) ctx.throw(500, err.message);
+            //         else {
+            //             if (doc) {
+            //                 data.id = ++doc.id;
+            //                 await db.getPrisonTerms().update();
+            //             }
+            //         }
+            //     });
+            // }
+        });
+
+        if (success !== 0 || failed !== 0) {
+            ctx.body = {
                 code: 200,
                 msg: '解析文件成功',
                 data: {
-                    prisoners: prisoners
+                    success: success,
+                    failed: success
                 }
-            }; else ctx.body = {
+            }
+        } else {
+            ctx.body = {
                 code: 500,
                 msg: '解析文件失败',
-                data: {}
+                data: {
+                    success: success,
+                    failed: failed
+                }
             }
-        }).catch(err => ctx.throw(500, err.message));
+        }
     }
 }
 

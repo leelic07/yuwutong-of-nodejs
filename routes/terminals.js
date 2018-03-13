@@ -9,4 +9,8 @@ router.prefix('/terminals');
 
 router.get('/page', terminalsController.terminals);
 
+router.post('/edit', terminalsController.edit);
+
+router.post('/add', terminalsController.add);
+
 module.exports = router;

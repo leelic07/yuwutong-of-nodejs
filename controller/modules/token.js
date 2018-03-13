@@ -13,14 +13,31 @@ class Token {
 
     //生成token信息
     async authentication(ctx, next) {
-        // await db.getUsers().create({
+        // await db.getUsers().create(
+        //     {
+        //         id: 4,
+        //         username: '孙六',
+        //         salt: '4501_sp',
+        //         hashed_password: '123456',
+        //         role: 2,
+        //         jail_id: 1
+        //     }, {
+        //         id: 5,
+        //         username: '陈七',
+        //         salt: '4501_xx',
+        //         hashed_password: '123456',
+        //         role: 3,
+        //         jail_id: 1
+        //     }
+        // {
         //     id: 1,
         //     username: '张三',
         //     salt: '4501_sh',
         //     hashed_password: '123456',
         //     role: 1,
         //     jail_id: 1
-        // }, {
+        // },
+        //     {
         //     id: 2,
         //     username: '李四',
         //     salt: '4502_sp',
@@ -34,7 +51,8 @@ class Token {
         //     hashed_password: '123456',
         //     role: 1,
         //     jail_id: 3,
-        // }).then(result => {
+        // }
+        // ).then(result => {
         //     if (result) {
         //         ctx.body = {
         //             code: 200,
@@ -49,6 +67,7 @@ class Token {
         //         }
         //     }
         // }).catch(err => ctx.throw(err.status | 500, err.message));
+
         //
         // await db.getJails().create({
         //     id: 1,
