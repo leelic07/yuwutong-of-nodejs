@@ -12,6 +12,8 @@ router.get('/page', itemsController.page);
 
 router.get('/description', itemsController.description);
 
-router.post('/add', util.fileuploads.single('image'), itemsController.add);
+router.post('/add', util.fileuploads.single('file'), itemsController.add);
+
+router.post('/delete', itemsController.delete);
 
 module.exports = router;

@@ -108,20 +108,58 @@ class Items {
 
     //编辑或者添加
     async add(ctx, next) {
-        console.log(ctx.req.body);
-        if (ctx.req.file) {
-            ctx.body = {
+        let body = ctx.req.body;
+        let file = ctx.req.file;
+        body.categoryId ? body.category_id = body.categoryId : '';
+        file && Object.assign(body, {
+            avatar_file_name: file.filename,
+            avatar_file_type: file.mimetype,
+            avatar_file_size: file.size,
+            avatar_updated_at: Date.now(),
+            avatar_url: file.path,
+            jail_id: ctx.request.user.jail_id
+        });
+        //编辑商品信息
+        body.id ? await db.getItems().updateItems({id: body.id}, body).then(result => {
+            if (result) ctx.body = {
                 code: 200,
-                msg: '上传文件成功',
-                path: ctx.req.file.path
-            };
-        } else ctx.body = {
-            code: 500,
-            msg: '上传文件失败',
-            data: {
-                filepath: ''
+                msg: '编辑商品信息成功',
+                data: {}
+            }; else ctx.body = {
+                code: 500,
+                msg: '编辑商品信息失败',
+                data: {}
             }
-        }
+        }).catch(err => ctx.throw(500, err.message))
+            //添加商品信息
+            : await db.getItems().addItems(body).then(item => {
+            if (item) ctx.body = {
+                code: 200,
+                msg: '添加商品信息成功',
+                data: {
+                    items: item
+                }
+            }; else ctx.body = {
+                code: 500,
+                msg: '添加商品信息失败',
+                data: {}
+            }
+        }).catch(err => ctx.throw(500, err.message));
+    }
+
+    //删除商品信息
+    async delete(ctx, next) {
+        await db.getItems().deleteItems({id: ctx.request.body.id}).then(result => {
+            if (result) ctx.body = {
+                code: 200,
+                msg: '删除商品信息成功',
+                data: {}
+            }; else ctx.body = {
+                code: 500,
+                msg: '删除商品信息失败',
+                data: {}
+            }
+        }).catch(err => ctx.throw(500, err.message));
     }
 }
 

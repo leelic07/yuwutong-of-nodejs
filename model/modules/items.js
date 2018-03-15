@@ -30,7 +30,10 @@ items.statics = {
     findById(request = {}){
         let self = this;
         let query = request.query;
-        let condition = {jail_id: request.user.jail_id};
+        let condition = {
+            jail_id: request.user.jail_id,
+            sys_flag: 1
+        };
         query.id ? condition.id = query.id : '';
         return new Promise((resolve, reject) => {
             self.findOne(condition, {'_id': 0, '__v': 0}, (e, doc) => {
@@ -42,12 +45,15 @@ items.statics = {
         });
     },
     //分页查商品信息列表
-    findPage(request = {}) {
+    findPage(request = {}){
         let self = this;
         let query = request.query;
         let page = Number(query.page), rows = Number(query.rows);
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
-        let condition = {jail_id: request.user.jail_id};
+        let condition = {
+            jail_id: request.user.jail_id,
+            sys_flag: 1
+        };
         query.title ? condition.title = query.title : '';
         return new Promise((resolve, reject) => {
             self.find(condition, {
@@ -62,10 +68,13 @@ items.statics = {
         });
     },
     //查询商品列表的记录数
-    countTotal(request = {}) {
+    countTotal(request = {}){
         let self = this;
         let query = request.query;
-        let condition = {jail_id: request.user.jail_id};
+        let condition = {
+            jail_id: request.user.jail_id,
+            sys_flag: 1
+        };
         query.title ? condition.title = query.title : '';
         return new Promise((resolve, reject) => {
             self.count(condition, (e, doc) => {
@@ -76,11 +85,56 @@ items.statics = {
             });
         });
     },
+    //添加商品信息
+    addItems(field = {}){
+        let self = this;
+        let id = 0;
+        return new Promise((resolve, reject) => {
+            self.findOne().sort({id: -1}).exec((e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else {
+                    if (doc) field.id = ++doc.id;
+                    else field.id = ++id;
+                    let item = new self(field);
+                    item.save((e, doc) => {
+                        if (e) reject(e);
+                        else resolve(doc);
+                    });
+                }
+            });
+        });
+    },
     //新增商品信息
     createItems(...field){
         let self = this;
         return new Promise((resolve, reject) => {
             self.insertMany(field, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            });
+        });
+    },
+    //编辑商品信息
+    updateItems(condition = {}, field = {}){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.update(condition, field, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            });
+        });
+    },
+    //删除商品信息
+    deleteItems(condition = {}){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.update(condition, {sys_flag: 0}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);

@@ -9,4 +9,6 @@ router.get('/', usersController.users);
 
 router.post('/login', tokenController.authentication);
 
+router.get('/logout', tokenController.logout);
+
 module.exports = router;

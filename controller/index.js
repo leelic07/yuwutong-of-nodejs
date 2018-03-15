@@ -15,6 +15,8 @@ const versions = require('./modules/versions');
 const upload = require('./modules/upload');
 const prison_terms = require('./modules/prison_terms');
 const items = require('./modules/items');
+const cors = require('./modules/cors');
+const orders = require('./modules/orders');
 
 class Controller {
     constructor(params) {
@@ -92,6 +94,16 @@ class Controller {
     getItemsController() {
         return this.items;
     }
+
+    //获取跨域设置的控制器
+    getCorsController() {
+        return this.cors;
+    }
+
+    //获取商品订单的控制器
+    getOrdersController() {
+        return this.orders;
+    }
 }
 
 let controller = new Controller({
@@ -108,7 +120,9 @@ let controller = new Controller({
     versions,
     upload,
     prison_terms,
-    items
+    items,
+    cors,
+    orders
 });
 
 module.exports = controller;

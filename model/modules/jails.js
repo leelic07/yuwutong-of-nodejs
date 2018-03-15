@@ -3,6 +3,7 @@
  */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const util = require('../../util');
 
 let jails = new Schema({
     id: {type: Number, required: true},//监狱id
@@ -25,6 +26,18 @@ let jails = new Schema({
 });
 
 jails.statics = {
+    //根据监狱id查询监狱信息
+    findById(id = ''){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.findOne({id: id}, {'_id': 0, '__v': 0}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(util.transformObj(doc));
+            });
+        });
+    },
     //查询监狱信息
     findJails(condition = {}, field = {}) {
         let self = this;

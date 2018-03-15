@@ -136,18 +136,19 @@ class Token {
                         msg: '用户账号或者密码不正确',
                         data: ''
                     }
-                }).catch(err => ctx.throw(err.status || 500, err.message));
+                }).catch(err => ctx.throw(500, err.message));
             } else ctx.body = {
                 code: 404,
                 msg: '用户不存在',
                 data: ''
             }
-        }).catch(err => ctx.throw(err.status || 500, err.message));
+        }).catch(err => ctx.throw(500, err.message));
     }
 
     //验证token
     async verifyToken(ctx, next) {
         let decode;
+        // console.log(ctx.originalUrl);
         if (ctx.originalUrl === '/users/login') await next();
         else {
             //检查post的信息或者url查询参数或者头信息
@@ -165,6 +166,21 @@ class Token {
                 if (decode) await next();
                 else ctx.throw(403, '用户未授权或者授权超时，请重新登录');
             } else ctx.throw(403, '用户没有授权');// 如果没有token，则返回错误
+        }
+    }
+
+    //退出登录
+    async logout(ctx, next) {
+        // let token = jwt.sign(ctx.request.user, 'logout', {'expiresIn': 7200});
+        // if (token)
+        ctx.body = {
+            code: 200,
+            msg: '退出登录成功',
+            data: {}
+            // }; else ctx.body = {
+            //     code: 500,
+            //     msg: '退出登录失败',
+            //     data: {}
         }
     }
 }

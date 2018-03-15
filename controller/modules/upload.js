@@ -8,7 +8,6 @@ class Upload {
     //上传文件
     async upload(ctx, next) {
         if (ctx.req.file) {
-            // ctx.request.file.path =
             ctx.body = {
                 code: 200,
                 msg: '上传文件成功',
