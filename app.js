@@ -22,6 +22,9 @@ const upload = require('./routes/upload');
 const prison_terms = require('./routes/prison_terms');
 const items = require('./routes/items');
 const orders = require('./routes/orders');
+const jails = require('./routes/jails');
+const news = require('./routes/news');
+
 //引用数据库模型
 require('./model/index');
 // error handler
@@ -48,7 +51,7 @@ app.use(async (ctx, next) => {
 });
 
 //跨域
-// app.use(controller.getCorsController().cors);
+app.use(controller.getCorsController().cors);
 
 //token拦截器
 app.use(controller.getTokenController().verifyToken);
@@ -69,6 +72,8 @@ app.use(upload.routes(), upload.allowedMethods());
 app.use(prison_terms.routes(), prison_terms.allowedMethods());
 app.use(items.routes(), items.allowedMethods());
 app.use(orders.routes(), orders.allowedMethods());
+app.use(jails.routes(), jails.allowedMethods());
+app.use(news.routes(), news.allowedMethods());
 // error-handling
 app.on('error', (err, ctx) => {
     console.error('server error', err, ctx);

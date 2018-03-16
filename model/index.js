@@ -18,6 +18,9 @@ const versions = require('./modules/versions');
 const prison_terms = require('./modules/prison_terms');
 const items = require('./modules/items');
 const orders = require('./modules/orders');
+const line_items = require('./modules/line_items');
+const news = require('./modules/news');
+
 //数据库对象
 class DataBase {
     constructor(params) {
@@ -112,6 +115,16 @@ class DataBase {
     getOrders() {
         return this.orders;
     }
+
+    //获取商品订单的模型
+    getLineItems() {
+        return this.line_items;
+    }
+
+    //获取新闻信息的模型
+    getNews() {
+        return this.news;
+    }
 }
 
 let database = new DataBase({
@@ -129,7 +142,9 @@ let database = new DataBase({
     versions,
     prison_terms,
     items,
-    orders
+    orders,
+    line_items,
+    news
 });
 
 //连接数据库

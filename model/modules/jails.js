@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const util = require('../../util');
 
 let jails = new Schema({
-    id: {type: Number, required: true},//监狱id
+    id: {type: Number, required: true, unique: true},//监狱id
     prison: {type: String, default: ''},//监狱代码
     title: {type: String, default: ''},//监狱名称
     description: {type: String, default: ''},//监狱描述
@@ -30,7 +30,7 @@ jails.statics = {
     findById(id = ''){
         let self = this;
         return new Promise((resolve, reject) => {
-            self.findOne({id: id}, {'_id': 0, '__v': 0}, (e, doc) => {
+            self.findOne({'id': id}, {'_id': 0, '__v': 0}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
@@ -39,14 +39,14 @@ jails.statics = {
         });
     },
     //查询监狱信息
-    findJails(condition = {}, field = {}) {
+    findJails(condition = {}) {
         let self = this;
         return new Promise((resolve, reject) => {
-            self.findOne(condition, field, (e, doc) => {
+            self.findOne(condition, {'_id': 0, '__v': 0}, (e, doc) => {
                 if (e) {
                     console.log(e);
                     reject(e);
-                } else resolve(doc);
+                } else resolve(util.transformObj(doc));
             });
         });
     },

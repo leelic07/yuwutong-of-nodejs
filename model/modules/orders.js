@@ -28,7 +28,7 @@ orders.statics = {
                 if (e) {
                     console.log(e);
                     reject(e);
-                } else resolve(transformObj(doc));
+                } else resolve(util.transformObj(doc));
             });
         })
     },
@@ -38,7 +38,10 @@ orders.statics = {
         let query = request.query;
         let page = Number(query.page), rows = Number(query.rows);
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
-        let condition = {jail_id: request.user.jail_id};
+        let condition = {
+            jail_id: request.user.jail_id,
+            status: 'TRADE_SUCCESS'
+        };
         return new Promise((resolve, reject) => {
             self.find(condition, {
                 '_id': 0,
@@ -54,7 +57,10 @@ orders.statics = {
     //查询家属订单列表的记录数
     countTotal(request = {}){
         let self = this;
-        let condition = {jail_id: request.user.jail_id};
+        let condition = {
+            jail_id: request.user.jail_id,
+            status: 'TRADE_SUCCESS'
+        };
         return new Promise((resolve, reject) => {
             self.count(condition, (e, doc) => {
                 if (e) {
@@ -76,6 +82,18 @@ orders.statics = {
             });
         });
     },
+    //编辑家属订单信息
+    updateOrders(condition = {}, field = {}){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.update(condition, {...field, updated_at: Date.now()}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            });
+        });
+    }
 };
 
 module.exports = mongoose.model('orders', orders);

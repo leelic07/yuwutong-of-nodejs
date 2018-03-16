@@ -4,8 +4,6 @@
 const db = require('../../model');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Schema.Types.ObjectId;
 
 class Token {
     constructor() {
@@ -110,12 +108,13 @@ class Token {
         //     }
         // }).catch(err => ctx.throw(err.status | 500, err.message));
 
-        let req = ctx.request.body;
-        await db.getJails().findJails({prison: req.prison}).then(async jail => {
+        let body = ctx.request.body;
+        await db.getJails().findJails({prison: body.prison}).then(async jail => {
             if (jail) {
+                console.log(jail.title);
                 await db.getUsers().findUsers({
-                    salt: req.username,
-                    hashed_password: req.password,
+                    salt: body.username,
+                    hashed_password: body.password,
                     jail_id: Number(jail.id)
                 }, {'_id': 0, '__v': 0, hashed_password: 0}).then(user => {
                     if (user) {
@@ -125,10 +124,12 @@ class Token {
                         }, config.secret, {'expiresIn': 7200});
                         ctx.body = {
                             code: 200,
-                            msg: '获取token成功',
+                            msg: '登录成功',
                             data: {
                                 token: token,
-                                users: user
+                                users: Object.assign(user, {
+                                    jailName: jail.title
+                                })
                             }
                         }
                     } else ctx.body = {

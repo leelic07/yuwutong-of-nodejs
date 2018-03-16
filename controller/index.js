@@ -17,6 +17,8 @@ const prison_terms = require('./modules/prison_terms');
 const items = require('./modules/items');
 const cors = require('./modules/cors');
 const orders = require('./modules/orders');
+const jails = require('./modules/jails');
+const news = require('./modules/news');
 
 class Controller {
     constructor(params) {
@@ -104,6 +106,16 @@ class Controller {
     getOrdersController() {
         return this.orders;
     }
+
+    //获取监狱信息的控制器
+    getJailsController() {
+        return this.jails;
+    }
+
+    //获取新闻信息的控制器
+    getNewsController() {
+        return this.news;
+    }
 }
 
 let controller = new Controller({
@@ -122,7 +134,9 @@ let controller = new Controller({
     prison_terms,
     items,
     cors,
-    orders
+    orders,
+    jails,
+    news
 });
 
 module.exports = controller;
