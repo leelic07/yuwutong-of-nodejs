@@ -19,6 +19,8 @@ const mailboxes = require('./routes/mail_boxes');
 const terminals = require('./routes/terminals');
 const versions = require('./routes/versions');
 const upload = require('./routes/upload');
+const prison_terms = require('./routes/prison_terms');
+const items = require('./routes/items');
 //引用数据库模型
 require('./model/index');
 // error handler
@@ -60,6 +62,8 @@ app.use(mailboxes.routes(), mailboxes.allowedMethods());
 app.use(terminals.routes(), terminals.allowedMethods());
 app.use(versions.routes(), versions.allowedMethods());
 app.use(upload.routes(), upload.allowedMethods());
+app.use(prison_terms.routes(), prison_terms.allowedMethods());
+app.use(items.routes(), items.allowedMethods());
 // error-handling
 app.on('error', (err, ctx) => {
     console.error('server error', err, ctx);

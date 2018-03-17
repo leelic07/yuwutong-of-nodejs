@@ -13,6 +13,8 @@ const mail_boxes = require('./modules/mail_boxes');
 const terminals = require('./modules/terminals');
 const versions = require('./modules/versions');
 const upload = require('./modules/upload');
+const prison_terms = require('./modules/prison_terms');
+const items = require('./modules/items');
 
 class Controller {
     constructor(params) {
@@ -80,6 +82,16 @@ class Controller {
     getUploadController() {
         return this.upload;
     }
+
+    //获取刑期变动的控制器
+    getPrisonTermsController() {
+        return this.prison_terms;
+    }
+
+    //获取商品列表的控制器
+    getItemsController() {
+        return this.items;
+    }
 }
 
 let controller = new Controller({
@@ -94,7 +106,9 @@ let controller = new Controller({
     mail_boxes,
     terminals,
     versions,
-    upload
+    upload,
+    prison_terms,
+    items
 });
 
 module.exports = controller;

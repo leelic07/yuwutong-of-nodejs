@@ -32,7 +32,7 @@ accounts.statics = {
         let query = request.query;
         let page = Number(query.page), rows = Number(query.rows);
         let start = (page - 1) * rows > 0 ? (page - 1) * rows : 0;
-        let condition = {};
+        let condition = {jail_id: request.user.jail_id};
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {
@@ -51,7 +51,7 @@ accounts.statics = {
     findTotal(request = {}) {
         let self = this;
         let query = request.query;
-        let condition = {};
+        let condition = {jail_id: request.user.jail_id};
         query.name ? condition.name = query.name : '';
         query.prisonerNumber ? condition.prisoner_number = query.prisonerNumber : '';
         return new Promise((resolve, reject) => {

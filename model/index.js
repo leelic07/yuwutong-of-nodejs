@@ -15,6 +15,8 @@ const mail_boxes = require('./modules/mail_boxes');
 const comments = require('./modules/comments');
 const terminals = require('./modules/terminals');
 const versions = require('./modules/versions');
+const prison_terms = require('./modules/prison_terms');
+const items = require('./modules/items');
 //数据库对象
 class DataBase {
     constructor(params) {
@@ -94,6 +96,16 @@ class DataBase {
     getVersions() {
         return this.versions;
     }
+
+    //获取刑期变动的模型
+    getPrisonTerms() {
+        return this.prison_terms;
+    }
+
+    //获取商品信息的模型
+    getItems() {
+        return this.items;
+    }
 }
 
 let database = new DataBase({
@@ -108,7 +120,9 @@ let database = new DataBase({
     mail_boxes,
     comments,
     terminals,
-    versions
+    versions,
+    prison_terms,
+    items
 });
 
 //连接数据库

@@ -3,8 +3,10 @@
  */
 const transformStr = require('./modules/transformStr');
 const fileuploads = require('./modules/fileuploads');
+const excelparser = require('./modules/excel-parser');
 
 module.exports = {
     ...transformStr,
-    fileuploads
+    fileuploads,
+    excelparser
 };

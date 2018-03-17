@@ -7,7 +7,7 @@ const util = require('../../util');
 
 let prisoners = new Schema({
     id: {type: Number, required: true, unique: true},//罪犯id
-    prisoner_number: String,//罪犯编号
+    prisoner_number: {type: String, required: true},//罪犯编号
     // families: [{type: Number, ref: 'families'}],//罪犯对应的家属信息
     name: {type: String, default: ''},//罪犯名称
     gender: {type: String, default: ''},//罪犯性别
@@ -24,6 +24,31 @@ let prisoners = new Schema({
 });
 
 prisoners.statics = {
+    findByPrisonerNumberAndUpdate(prisoner = {}){
+        let self = this;
+        let prisoner_number = prisoner.prisoner_number;
+        // delete prisoner.prisoner_number;
+        return new Promise((resolve, reject) => {
+            self.update({prisoner_number: prisoner_number}, prisoner, {upsert: false}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            });
+        });
+    },
+    //根据罪犯编号数组查询罪犯信息
+    findByPrisonerNumbers(prisoner_numbers = []){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.find({prisoner_number: {$in: prisoner_numbers}}, {'_id': 0, '__v': 0}, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(doc);
+            });
+        });
+    },
     //根据id查询罪犯信息
     findById(id = ''){
         let self = this;
@@ -110,7 +135,7 @@ prisoners.statics = {
         })
     },
     //新增服刑人员信息
-    createPrisoners(...field) {
+    createPrisoners(...field){
         let self = this;
         return new Promise((resolve, reject) => {
             self.insertMany(field, (e, doc) => {
@@ -119,7 +144,27 @@ prisoners.statics = {
                     reject(e);
                 } else resolve(doc);
             });
-        })
+        });
+    },
+    //解析服刑人员excel信息
+    parsePrisoners(...field) {
+        let self = this;
+        let id = 0;
+        return new Promise((resolve, reject) => {
+            self.findOne().sort({id: -1}).exec((e, doc) => {
+                if (e) reject(e);
+                else {
+                    if (doc.id) field.forEach(f => f.id = ++doc.id);
+                    else field.forEach(f => f.id = ++id);
+                    self.insertMany(field, (e, doc) => {
+                        if (e) {
+                            console.log(e);
+                            reject(e);
+                        } else resolve(doc);
+                    });
+                }
+            });
+        });
     },
     //修改服刑人员信息
     updatePrisoners(condition = {}, field = {}) {
