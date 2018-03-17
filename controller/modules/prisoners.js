@@ -64,16 +64,17 @@ class Prisoners {
         let prisonersList = [];//罪犯信息列表
         let familiesList = [];//家属信息列表
         await db.getPrisoners().findPage(ctx.request).then(async prisoners => {
-            if (prisoners.length) {
-                await db.getPrisoners().findTotal(ctx.request).then(total => size = total).catch(err => ctx.throw(err.status || 500, err.message));
-                prisonersList = prisoners;
-                console.log('prisonersList', prisoners);
-            } else ctx.body = {
-                code: 404,
-                msg: '未找到服刑人员信息',
-                data: {}
+                if (prisoners.length) {
+                    await db.getPrisoners().findTotal(ctx.request).then(total => size = total).catch(err => ctx.throw(err.status || 500, err.message));
+                    prisonersList = prisoners;
+                    console.log('prisonersList', prisoners);
+                } else ctx.body = {
+                    code: 404,
+                    msg: '未找到服刑人员信息',
+                    data: {}
+                }
             }
-        }).catch(err => ctx.throw(err.status || 500, err.message));
+        ).catch(err => ctx.throw(err.status || 500, err.message));
         //查询家属信息列表
         await db.getFamilies().findFamilies().then(families => {
             if (families.length) {
@@ -103,7 +104,7 @@ class Prisoners {
     }
 
     //处理上传的罪犯模板
-    async processing(ctx, next) {
+    processing(ctx, next) {
         let data = util.excelparser(ctx.request.query.filepath);
         let dataTemp = [];
         // let prisoner_numbers = [];
@@ -121,23 +122,107 @@ class Prisoners {
                 prison_term_ended_at: param[6],
                 prison_area: param[7],
                 original_sentence: param[8],
-                jail_id: ctx.request.user.jail_id
+                jail_id: ctx.request.user.jail_id,
+                // add_total: 0,
+                // success_total: 0,
+                // update_total: 0
             });
         }
 
-        await db.getPrisoners().parsePrisoners(...dataTemp).then(prisoners => {
-            if (prisoners.length) ctx.body = {
-                code: 200,
-                msg: '解析文件成功',
-                data: {
-                    prisoners: prisoners
+        let add_total = [];
+        let success_total = [];
+        let update_total = [];
+        // let dataIndex = 0;
+        dataTemp.forEach((data, index, arr) => {
+            db.getPrisoners().findOne({
+                prisoner_number: data.prisoner_number,
+                jail_id: ctx.request.user.jail_id
+            }, (err, doc) => {
+                if (err) ctx.throw(500, err.message);
+                else {
+                    if (doc) {
+                        db.getPrisoners().update({prisoner_number: data.prisoner_number}, data, (err, doc) => {
+                            if (err) ctx.throw(500, err.message);
+                            else {
+                                if (doc) {
+                                    update_total.push(doc);
+                                    success_total.push(doc);
+                                }
+                            }
+                        });
+                    } else {
+                        db.getPrisoners().findOne().sort({id: -1}).exec((err, doc) => {
+                            if (err) ctx.throw(500, err.message);
+                            else {
+                                if (doc) data.id = ++doc.id;
+                                else data.id = 1;
+                                let Prisoner = db.getPrisoners();
+                                let p = new Prisoner(data);
+                                p.save((err, doc) => {
+                                    if (err) ctx.throw(500, err.message);
+                                    else {
+                                        if (doc) {
+                                            add_total.push(doc);
+                                            success_total.push(doc);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }
-            }; else ctx.body = {
-                code: 500,
-                msg: '解析文件失败',
-                data: {}
-            };
-        }).catch(err => ctx.throw(500, err.message));
+            });
+            // else {
+            //     ctx.body = {
+            //         code: 500,
+            //         msg: '解析文件失败',
+            //         data: {
+            //             add_total: add_total,
+            //             success_total: success_total,
+            //             update_total: update_total
+            //         }
+            //     }
+            // }
+        });
+
+        console.log(success_total, add_total, update_total);
+
+        if (success_total.length) ctx.body = {
+            code: 200,
+            msg: '解析文件成功',
+            data: {
+                add_total: add_total.length,
+                success_total: success_total.length,
+                update_total: update_total.length
+            }
+        };
+
+        // if (success_total) {
+        //
+        // }
+        // else ctx.body = {
+        //     code: 500,
+        //     msg: '解析文件失败',
+        //     data: {
+        //         add_total: add_total,
+        //         success_total: success_total,
+        //         update_total: update_total
+        //     }
+        // }
+
+        // await db.getPrisoners().parsePrisoners(...dataTemp).then(prisoners => {
+        //     if (prisoners.length) ctx.body = {
+        //         code: 200,
+        //         msg: '解析文件成功',
+        //         data: {
+        //             prisoners: prisoners
+        //         }
+        //     }; else ctx.body = {
+        //         code: 500,
+        //         msg: '解析文件失败',
+        //         data: {}
+        //     };
+        // }).catch(err => ctx.throw(500, err.message));
 
         // let prisoner;
         // let newPrisoners = [];
