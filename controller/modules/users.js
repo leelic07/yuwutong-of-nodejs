@@ -39,8 +39,25 @@ class Users {
         //     }
         // }
     }
+
+    //修改账户密码
+    async resetPwd(ctx, next) {
+        let body = ctx.request.body;
+        await db.getUsers().updateUsers({
+            id: ctx.request.user.user_id,
+            hashed_password: body.old_password
+        }, {hashed_password: body.new_password}).then(result => {
+            if (result) ctx.body = {
+                code: 200,
+                msg: '修改用户密码成功',
+                data: {}
+            }; else ctx.body = {
+                code: 500,
+                msg: '修改用户密码失败',
+                data: {}
+            }
+        }).catch(err => ctx.throw(500, err.message));
+    }
 }
 
-let users = new Users();
-
-module.exports = users;
+module.exports = new Users();

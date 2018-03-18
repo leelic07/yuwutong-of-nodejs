@@ -28,60 +28,72 @@ class PrisonTerms {
             });
         }
 
-        await dataTemp.forEach(data => {
-            db.getPrisoners().findOne({
-                prisoner_number: data.prisoner_number,
-                jail_id: req.user.jail_id
-            }, (err, prisoner) => {
-                if (err) ctx.throw(500, err.message);
-                else {
-                    if (prisoner) {
-                        data.prisoner_id = prisoner.id;
-                    }
-                }
-            })
-        });
-        let success = 0;//成功的条数
-        let failed = 0;//失败的条数
-        await dataTemp.forEach(data => {
-            if (data['prisoner_id']) {
-                db.getPrisonTerms().update({prisoner_id: data['prisoner_id']}, data, (err, doc) => {
-                    if (err) ctx.throw(500, err.message);
-                    else doc && ++success || ++failed;
-                });
-            } else ++failed;
-            // {
-            //     await db.getPrisonTerms().findOne().sort({id: -1}).exec(async (err, doc) => {
-            //         if (err) ctx.throw(500, err.message);
-            //         else {
-            //             if (doc) {
-            //                 data.id = ++doc.id;
-            //                 await db.getPrisonTerms().update();
-            //             }
-            //         }
-            //     });
-            // }
-        });
-
-        if (success !== 0 || failed !== 0) {
-            ctx.body = {
+        await db.getPrisonTerms().parsePrisonTerms(...dataTemp).then(prisonTerms => {
+            if (prisonTerms.length) ctx.body = {
                 code: 200,
-                msg: '解析文件成功',
+                msg: "解析文件成功",
                 data: {
-                    success: success,
-                    failed: success
+                    add_total: prisonTerms.length,
+                    success_total: prisonTerms.length,
+                    update_total: 0
                 }
             }
-        } else {
-            ctx.body = {
-                code: 500,
-                msg: '解析文件失败',
-                data: {
-                    success: success,
-                    failed: failed
-                }
-            }
-        }
+        }).catch(err => ctx.throw(500, err.message));
+
+        // await dataTemp.forEach(data => {
+        //     db.getPrisoners().findOne({
+        //         prisoner_number: data.prisoner_number,
+        //         jail_id: req.user.jail_id
+        //     }, (err, prisoner) => {
+        //         if (err) ctx.throw(500, err.message);
+        //         else {
+        //             if (prisoner) {
+        //                 data.prisoner_id = prisoner.id;
+        //             }
+        //         }
+        //     })
+        // });
+        // let success = 0;//成功的条数
+        // let failed = 0;//失败的条数
+        // await dataTemp.forEach(data => {
+        //     if (data['prisoner_id']) {
+        //         db.getPrisonTerms().update({prisoner_id: data['prisoner_id']}, data, (err, doc) => {
+        //             if (err) ctx.throw(500, err.message);
+        //             else doc && ++success || ++failed;
+        //         });
+        //     } else ++failed;
+        // {
+        //     await db.getPrisonTerms().findOne().sort({id: -1}).exec(async (err, doc) => {
+        //         if (err) ctx.throw(500, err.message);
+        //         else {
+        //             if (doc) {
+        //                 data.id = ++doc.id;
+        //                 await db.getPrisonTerms().update();
+        //             }
+        //         }
+        //     });
+        // }
+        // });
+
+        // if (success !== 0 || failed !== 0) {
+        //     ctx.body = {
+        //         code: 200,
+        //         msg: '解析文件成功',
+        //         data: {
+        //             success: success,
+        //             failed: success
+        //         }
+        //     }
+        // } else {
+        //     ctx.body = {
+        //         code: 500,
+        //         msg: '解析文件失败',
+        //         data: {
+        //             success: success,
+        //             failed: failed
+        //         }
+        //     }
+        // }
     }
 }
 

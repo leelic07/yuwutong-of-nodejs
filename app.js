@@ -5,6 +5,7 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
+const cors = require('koa2-cors');
 const controller = require('./controller');
 //引入路由文件
 const index = require('./routes/index');
@@ -50,8 +51,17 @@ app.use(async (ctx, next) => {
     console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
 
-//跨域
-app.use(controller.getCorsController().cors);
+//设置跨越请求
+app.use(cors({
+    origin: function (ctx) {
+        return ctx.request.header['origin'];
+    },
+    exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+    maxAge: 5,
+    credentials: true,
+    allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+}));
 
 //token拦截器
 app.use(controller.getTokenController().verifyToken);

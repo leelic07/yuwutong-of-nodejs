@@ -11,4 +11,6 @@ router.post('/login', tokenController.authentication);
 
 router.get('/logout', tokenController.logout);
 
+router.post('/resetPwd', usersController.resetPwd);
+
 module.exports = router;

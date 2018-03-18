@@ -26,7 +26,7 @@ users.statics = {
                 if (e) {
                     console.log(e);
                     reject(e);
-                } else resolve(util.transformObj(doc));
+                } else resolve(doc);
             });
         });
     },
