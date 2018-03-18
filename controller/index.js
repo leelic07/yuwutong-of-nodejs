@@ -108,7 +108,7 @@ let controller = new Controller({
     versions,
     upload,
     prison_terms,
-    items
+    items,
 });
 
 module.exports = controller;

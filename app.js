@@ -5,6 +5,7 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
+const cors = require('koa2-cors');
 const controller = require('./controller');
 //引入路由文件
 const index = require('./routes/index');
@@ -21,6 +22,7 @@ const versions = require('./routes/versions');
 const upload = require('./routes/upload');
 const prison_terms = require('./routes/prison_terms');
 const items = require('./routes/items');
+
 //引用数据库模型
 require('./model/index');
 // error handler
@@ -45,6 +47,18 @@ app.use(async (ctx, next) => {
     const ms = new Date() - start;
     console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
+
+//设置跨越请求
+app.use(cors({
+    origin: function (ctx) {
+        return ctx.request.header['origin'];
+    },
+    exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+    maxAge: 5,
+    credentials: true,
+    allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+}));
 
 //token拦截器
 app.use(controller.getTokenController().verifyToken);

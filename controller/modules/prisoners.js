@@ -129,6 +129,56 @@ class Prisoners {
             });
         }
 
+        // let update_total = 0;
+        // let success_total = 0;
+        // let add_total = 0;
+        // db.getPrisoners().find((err, docs) => {
+        //     if (err) ctx.throw(500, err.message);
+        //     else {
+        //         dataTemp.forEach(data => {
+        //             let prisoner = docs.find(doc => doc.prisoner_number === data.prisoner_number);
+        //             if (prisoner) {
+        //                 Object.assign(prisoner._doc, data);
+        //                 prisoner.save((err, doc) => {
+        //                     err && ctx.throw(500, err.message);
+        //                     if (!err) {
+        //                         update_total++;
+        //                         success_total++;
+        //                     }
+        //                 });
+        //             } else {
+        //                 db.getPrisoners().findOne().sort({id: -1}).exec((err, doc) => {
+        //                     err && ctx.throw(500, err.message);
+        //                     if (!err) {
+        //                         if (doc) data.id = ++doc.id;
+        //                         else data.id = 1;
+        //                         let Prisoner = db.getPrisoners();
+        //                         let p = new Prisoner(data);
+        //                         p.save((err, doc) => {
+        //                             err && ctx.throw(500, err.message);
+        //                             if (!err) {
+        //                                 add_total++;
+        //                                 success_total++;
+        //                             }
+        //                         });
+        //                     }
+        //                 });
+        //             }
+        //         });
+        //     }
+        // });
+
+        // if (success_total || add_total || update_total) {
+        //     ctx.body = {
+        //         code: 200,
+        //         msg: "解析文件成功",
+        //         data: {
+        //             add_total,
+        //             update_total,
+        //             success_total
+        //         }
+        //     }
+        // }
         // let add_total = [];
         // let success_total = [];
         // let update_total = [];
@@ -223,7 +273,8 @@ class Prisoners {
         //     }
         // }
 
-        await db.getPrisoners().parsePrisoners(...dataTemp).then(prisoners => {
+        await
+        db.getPrisoners().parsePrisoners(...dataTemp).then(prisoners => {
             if (prisoners.length) ctx.body = {
                 code: 200,
                 msg: '解析文件成功',
