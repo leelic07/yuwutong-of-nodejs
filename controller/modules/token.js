@@ -150,7 +150,7 @@ class Token {
     async verifyToken(ctx, next) {
         let decode;
         // console.log(ctx.originalUrl);
-        if (ctx.originalUrl === '/users/login') await next();
+        if (ctx.originalUrl === '/users/login' || /^\/public/.test(ctx.originalUrl)) await next();
         else {
             //检查post的信息或者url查询参数或者头信息
             let token = ctx.request.body.token || ctx.request.query.token || ctx.request.header['authorization'];
