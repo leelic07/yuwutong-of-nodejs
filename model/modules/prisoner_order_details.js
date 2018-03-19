@@ -13,6 +13,19 @@ let prisoner_order_details = mongoose.Schema({
     goods_num: {type: Number, default: 0}//商品数量
 });
 
-prisoner_order_details.statics = {};
+prisoner_order_details.statics = {
+    //添加罪犯订单详情信息
+    createPrisonerOrderDetails(field){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.insertMany(field, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(doc);
+                } else resolve(doc);
+            });
+        });
+    }
+};
 
 module.exports = mongoose.model('prisoner_order_details', prisoner_order_details);

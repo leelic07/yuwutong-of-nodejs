@@ -10,14 +10,27 @@ let prisoner_orders = mongoose.Schema({
     payment_type: {type: String, default: ''},//支付类型
     status: {type: String, default: ''},//状态
     ifreceive: {type: String, default: ''},//是否签收
-    created_at: {type: String, default: ''},//创建时间
-    updated_at: {type: Date, default: Date.now},//更新时间
+    created_at: {type: String, default: Date.now},//创建时间
+    updated_at: {type: String, default: Date.now},//更新时间
     amount: {type: Number, default: 0},//金额
     family_id: {type: Number, ref: 'families'},//家属id
     order_details: {type: String, default: ''},//订单描述
     total: {type: Number, default: 0},//订单总数
 });
 
-prisoner_orders.statics = {};
+prisoner_orders.statics = {
+    //添加罪犯订单信息
+    createPrisonerOrders(field){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.insertMany(field, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(doc);
+                } else resolve(doc);
+            });
+        });
+    }
+};
 
 module.exports = mongoose.model('prisoner_orders', prisoner_orders);

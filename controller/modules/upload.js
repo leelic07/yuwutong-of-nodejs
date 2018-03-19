@@ -16,9 +16,7 @@ class Upload {
         } else ctx.body = {
             code: 500,
             msg: '上传文件失败',
-            data: {
-                filepath: ''
-            }
+            path: ''
         }
     }
 }
