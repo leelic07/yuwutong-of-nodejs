@@ -15,10 +15,6 @@ router.get('/page', ordersController.page);
 
 router.get('/description', ordersController.description);
 
-router.post('/update',ordersController.update);
-
-// router.post('/add', util.ordersController, itemsController.add);
-
-// router.post('/delete', ordersController.delete);
+router.post('/update', ordersController.update);
 
 module.exports = router;

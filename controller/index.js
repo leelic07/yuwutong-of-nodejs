@@ -18,6 +18,8 @@ const items = require('./modules/items');
 const orders = require('./modules/orders');
 const jails = require('./modules/jails');
 const news = require('./modules/news');
+const prison_reward_punishment = require('./modules/prison_reward_punishment');
+const prisoner_orders = require('./modules/prisoner_orders');
 
 class Controller {
     constructor(params) {
@@ -110,6 +112,16 @@ class Controller {
     getNewsController() {
         return this.news;
     }
+
+    //获取罪犯奖惩的控制器
+    getPrisonRewardController() {
+        return this.prison_reward_punishment;
+    }
+
+    //获取罪犯订单的控制器
+    getPrisonerOrdersController() {
+        return this.prisoner_orders;
+    }
 }
 
 let controller = new Controller({
@@ -129,7 +141,9 @@ let controller = new Controller({
     items,
     orders,
     jails,
-    news
+    news,
+    prison_reward_punishment,
+    prisoner_orders
 });
 
 module.exports = controller;

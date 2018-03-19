@@ -2,6 +2,7 @@
  * Created by Administrator on 2018/3/13/013.
  */
 const mongoose = require('mongoose');
+const util = require('../../util');
 
 let prison_terms = mongoose.Schema({
     id: {type: Number, required: true, unique: true},//刑期变动id
@@ -20,14 +21,14 @@ let prison_terms = mongoose.Schema({
 
 prison_terms.statics = {
     //解析刑期变动excel信息
-    parsePrisonTerms(...field) {
+    parsePrisonTerms(field = []) {
         let self = this;
         let id = 0;
         return new Promise((resolve, reject) => {
             self.findOne().sort({id: -1}).exec((e, doc) => {
                 if (e) reject(e);
                 else {
-                    if (doc.id) field.forEach(f => f.id = ++doc.id);
+                    if (doc) field.forEach(f => f.id = ++doc.id);
                     else field.forEach(f => f.id = ++id);
                     self.insertMany(field, (e, doc) => {
                         if (e) {
@@ -40,17 +41,17 @@ prison_terms.statics = {
         });
     },
     //查询刑期变动表
-    // find(condition = {}, field = {}, options = {}){
-    //     let self = this;
-    //     return new Promise((resolve, reject) => {
-    //         self.find(condition, field, options, (e, doc) => {
-    //             if (e) {
-    //                 console.log(e);
-    //                 reject(e);
-    //             } else resolve(doc);
-    //         })
-    //     });
-    // },
+    findTerms(condition = {}, field = {}, options = {}){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.find(condition, field, options, (e, doc) => {
+                if (e) {
+                    console.log(e);
+                    reject(e);
+                } else resolve(util.transformArr(doc));
+            })
+        });
+    },
     // //增加刑期变动
     // create(...field){
     //     let self = this;

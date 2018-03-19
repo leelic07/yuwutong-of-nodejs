@@ -25,6 +25,8 @@ const items = require('./routes/items');
 const orders = require('./routes/orders');
 const jails = require('./routes/jails');
 const news = require('./routes/news');
+const prison_reward_punishment = require('./routes/prison_reward_punishment');
+const prisoner_orders = require('./routes/prisoner_orders');
 
 //引用数据库模型
 require('./model/index');
@@ -84,6 +86,9 @@ app.use(items.routes(), items.allowedMethods());
 app.use(orders.routes(), orders.allowedMethods());
 app.use(jails.routes(), jails.allowedMethods());
 app.use(news.routes(), news.allowedMethods());
+app.use(prison_reward_punishment.routes(), prison_reward_punishment.allowedMethods());
+app.use(prisoner_orders.routes(), prisoner_orders.allowedMethods());
+
 // error-handling
 app.on('error', (err, ctx) => {
     console.error('server error', err, ctx);

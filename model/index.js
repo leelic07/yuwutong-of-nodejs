@@ -20,6 +20,9 @@ const items = require('./modules/items');
 const orders = require('./modules/orders');
 const line_items = require('./modules/line_items');
 const news = require('./modules/news');
+const prison_reward_punishment = require('./modules/prison_reward_punishment');
+const prisoner_orders = require('./modules/prisoner_orders');
+const prisoner_order_details = require('./modules/prisoner_order_details');
 
 //数据库对象
 class DataBase {
@@ -125,6 +128,21 @@ class DataBase {
     getNews() {
         return this.news;
     }
+
+    //获取罪犯奖惩的模型
+    getPrisonReward() {
+        return this.prison_reward_punishment;
+    }
+
+    //获取罪犯订单的模型
+    getPrisonerOrders() {
+        return this.prisoner_orders;
+    }
+
+    //获取罪犯订单明细的模型
+    getPrisonerOrderDetails() {
+        return this.prisoner_order_details;
+    }
 }
 
 let database = new DataBase({
@@ -144,7 +162,10 @@ let database = new DataBase({
     items,
     orders,
     line_items,
-    news
+    news,
+    prison_reward_punishment,
+    prisoner_orders,
+    prisoner_order_details
 });
 
 //连接数据库

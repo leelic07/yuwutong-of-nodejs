@@ -75,9 +75,7 @@ prisoners.statics = {
                 if (e) {
                     console.log(e);
                     reject(e);
-                } else {
-                    resolve(util.transformArr(doc));
-                }
+                } else resolve(util.transformArr(doc));
             });
         });
     },
